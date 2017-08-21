@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script type="text/javascript">
+    if (window.parent!==window.self) {
+      try {
+        origin = (window.parent && window.parent.location.href) || window.location.origin;
+      } catch(e) {
+        origin = window.location.origin;
+      }
+      parent.postMessage(window.location.hash, origin);
+    } else {
+      const script = document.createElement("script");
+      script.src = "fnnauth.js";
+      script.onload = function () {
+        window.FNNAuth.handleCallback();
+      };
+      document.head.appendChild(script);
+    }
+  </script>
+</head>
+<body></body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "5ca2f8b5a26dc6f03c88eedb4adeecc9-89436a87dbdfa45b9fbc61d6f8b5254eec52eb7d",
+  "version": "1.0.0",
+  "description": "",
+  "main": "fnnauth.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
