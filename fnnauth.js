@@ -299,6 +299,9 @@
     // }).done(function() {
     //     ISA.track({ "email-sign-up-success": { listName: list } });
     // });
+
+
+
     //TO DO: make UI using vue.js
     //Goal: silent login, browser compatible, newsletter integration, spot im integration, editing profile
 
@@ -316,3 +319,7 @@
     //TO DO: connect with spot IM commenting
     //TO DO: have a file where we can save revision for login form
     //TO DO: way to easily migrate users
+
+
+    //link to user profile currently: http://www.foxnews.com/community/user/profile/edit
+
