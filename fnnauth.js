@@ -1,5 +1,5 @@
 (function(root) {
-  const storagePrefix = "ffnauth:";
+  const storagePrefix = "fnnauth:";
   const storageTokenKey = storagePrefix + "accessToken";
   const storageProfileKey = storagePrefix + "profile";
   const storageTargetUrlKey = storagePrefix + "targetUrl";
@@ -10,7 +10,6 @@
 
   if (!root.FNNAuth) {
     var domain;
-    var redirect;
     var containerElement;
     var webAuth;
     var initialized;
@@ -25,7 +24,7 @@
         // Options are retrieved synchronously to provide feedback to the instance creator
         try {
           const request = new XMLHttpRequest();
-          request.open('GET',  domain + ".json", false);  // Decide where to publish domain configs
+          request.open('GET', '/authn/' + domain + ".json", false);  // Decide where to publish domain configs
           request.send(null);
 
           if (request.status === 200) {
@@ -102,19 +101,19 @@
       containerElement.appendChild(createLink("Login","fnnauth0-login",startLogin));
     }
 
-    const createWebAuth = function() {
-      webAuth = webAuth || new auth0.WebAuth(options.default);
-      return webAuth;
+    const loadAuth0js = function(callback) {
+      if (!root.auth0) {
+        loadJs(auth0jslocation,callback);
+      } else {
+        callback();
+      }
     }
 
     const getWebAuth = function(callback) {
-      if (!root.auth0) {
-        loadJs(auth0jslocation, function () {
-          callback(createWebAuth());
-        });
-      } else {
-        callback(createWebAuth());
-      }
+      loadAuth0js(function() {
+        webAuth = webAuth || new root.auth0.WebAuth(options.default);
+        callback(webAuth);
+      });
     }
 
     const silentLogin = function(callback) {
@@ -145,17 +144,12 @@
       setTimeout(auth0Logout,50);
     }
 
-
     const startLogin = function(e) {
       if (e) e.preventDefault();
 
       storeTargetUrl(window.location.href);
       getWebAuth(function(webAuth){
-        if (redirect) {
-          webAuth.authorize(options.authorize);
-        } else {
-          webAuth.popup.authorize(options.popup, setResult(authnCallback));
-        }
+        webAuth.popup.authorize(options.popup, setResult(authnCallback));
       });
     }
 
@@ -192,6 +186,32 @@
           callback(null, user);
         });
       });
+    }
+
+    const mapProfile = function(profile) {
+      return profile
+    };
+
+    const setUserProfile= function(profile, callback) {
+      if (!isAuthenticated()) return callback(new Error("The user has to login to set the profile"));
+
+      silentLogin(setResult(function(err, authResult) {
+        if (!isAuthenticated()) return callback(new Error("The user has to login to set the profile"));
+        loadAuth0js(function() {
+
+          const mgmt = new root.auth0.Management({
+            domain: options.default.domain,
+            token: authResult.idToken
+          });
+
+          mgmt.patchUserMetadata(authResult.idTokenPayload.sub, mapProfile(profile), function(err, user) {
+            if (err) return callback(err);
+
+            storeProfile();
+            getUserProfile(callback);
+          });
+        });
+      }));
     }
 
     const isAuthenticated = function() {
@@ -231,9 +251,8 @@
       }
     }
     
-    const FNNAuth = function(domainName, useRedirect) {
+    const FNNAuth = function(domainName) {
       domain = domainName || root.location.hostname;
-      redirect = useRedirect!==false ;
       initiialized = false;
       options = getDomainOptions(domain);
     }
@@ -242,35 +261,23 @@
     FNNAuth.prototype.login = login;
     FNNAuth.prototype.isAuthenticated = isAuthenticated;
     FNNAuth.prototype.getUserProfile = getUserProfile;
+    FNNAuth.prototype.setUserProfile = setUserProfile;
 
-    const staticInitialize = function(domain, element, redirect) {
+    const staticInitialize = function(domain, element) {
       if (!element) {
         element = domain;
         domain = undefined;
       }
 
-      const instance = new FNNAuth(domain, redirect);
+      const instance = new FNNAuth(domain);
       instance.initialize(element);
     }
 
     const handleCallback = function(domain){
       options = getDomainOptions(domain || root.location.hostname);
       getWebAuth(function (webAuth){
-        if (root.opener) {
           webAuth.popup.callback();
-        setTimeout(function(){
-          root.close();
-        }, 1000)
-
-          
-        
-        } else {
-          webAuth.parseHash(setResult(function(err, authResult) {
-            const redirect = retrieveTargetUrl() || root.location.origin;
-            storeTargetUrl();
-            root.location.href = redirect;
-          }));
-        }
+          setTimeout(root.close,500);
       });
     }
 
