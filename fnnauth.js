@@ -128,7 +128,7 @@
       getWebAuth(function (webAuth) {
         const iframe = document.createElement("iframe");
         iframe.style.display="none";
-        iframe.src= webAuth.client.buildLogoutUrl();;
+        iframe.src= webAuth.client.buildLogoutUrl();
         document.body.appendChild(iframe);
         setTimeout(function() {
           document.body.removeChild(iframe);
@@ -315,3 +315,4 @@
     //TO DO: add links to the terms & conditions
     //TO DO: connect with spot IM commenting
     //TO DO: have a file where we can save revision for login form
+    //TO DO: way to easily migrate users
