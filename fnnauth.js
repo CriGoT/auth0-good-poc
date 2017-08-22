@@ -57,6 +57,7 @@
       return JSON.parse(storage.getItem(key));
     }
 
+    //binding the value to 'this' & adding it or retrieving it from storage 
     const storeAccessToken = store.bind(null,storageTokenKey);
     const storeProfile = store.bind(null,storageProfileKey);
     const storeTargetUrl = store.bind(null,storageTargetUrlKey);
@@ -319,6 +320,8 @@
     //TO DO: connect with spot IM commenting
     //TO DO: have a file where we can save revision for login form
     //TO DO: way to easily migrate users
+    //TO DO: clean up hosted login page on dashboard
+    //TO DO: add official logo
 
 
     //link to user profile currently: http://www.foxnews.com/community/user/profile/edit
