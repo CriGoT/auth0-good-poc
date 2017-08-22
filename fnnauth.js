@@ -24,7 +24,7 @@
         // Options are retrieved synchronously to provide feedback to the instance creator
         try {
           const request = new XMLHttpRequest();
-          request.open('GET', '/authn/' + domain + ".json", false);  // Decide where to publish domain configs
+          request.open('GET', domain + ".json", false);  // Decide where to publish domain configs
           request.send(null);
 
           if (request.status === 200) {
@@ -287,3 +287,31 @@
     root.FNNAuth = FNNAuth;
   }
 })(window)
+
+
+
+    // www.foxnews.com/portal/newsalertsubscribe
+    // $.ajax({
+    //     type: "POST",
+    //     url: "/portal/newsalertsubscribe",
+    //     data: ({ slids: SLID, email: email, format: "html" }),
+    //     dataType: "text"
+    // }).done(function() {
+    //     ISA.track({ "email-sign-up-success": { listName: list } });
+    // });
+    //TO DO: make UI using vue.js
+    //Goal: silent login, browser compatible, newsletter integration, spot im integration, editing profile
+
+
+
+    //QUESTION: request.open('GET', '/authn/' + domain + ".json", false); --need to publish domain configs
+    //TO DO: make pop up embeddable
+    //TO DO: Make callback url permissions link dynamic
+    //TO DO: allow users to edit their profile
+    //TO DO: linking users
+    //TO DO: user profiles
+    //TO DO: connect newsletter 
+    //TO DO: add 'rules'
+    //TO DO: add links to the terms & conditions
+    //TO DO: connect with spot IM commenting
+    //TO DO: have a file where we can save revision for login form
