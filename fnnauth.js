@@ -68,7 +68,7 @@
     const setResult = function(callback) {
       return function(err, authResult) {
         storeAccessToken(authResult && authResult.accessToken);
-        storeProfile();
+        //storeProfile();
         callback(err, authResult);
       }
     }
@@ -92,7 +92,63 @@
           return renderLoginBox();
         }
 
-        containerElement.innerHTML = "<span class='fnnauth-userinfo'>Welcome " + (profile.nickname || profile.email) + " </span>";
+        containerElement.innerHTML = "<div id='fnnauth-userinfo'></div><button id='save-profile'>Save Profile</button>";
+        var profileEditor = new JSONEditor(document.getElementById('fnnauth-userinfo'), {
+          disable_edit_json: true,
+          disable_collapse: true,
+          disable_properties: true,
+          schema: {
+            type: "object",
+            title: "Your Profile: @" + profile["https://example.com/nickname"],
+            properties: {
+              party: {
+                title: "Party",
+                type: "string",
+                enum: [
+                  "liberal",
+                  "democrat",
+                  "independent",
+                  "republican",
+                  "conservative"
+                ]
+              },
+              fb_breaking_alerts: {
+                type: "boolean",
+                format: "checkbox",
+                title: "Subscribe to FB Breaking Alerts"
+              },
+              fn_breaking_alerts: {
+                type: "boolean",
+                format: "checkbox",
+                title: "Subscribe to FN Breaking Alerts"
+              },
+              fn_morn_headlines: {
+                type: "boolean",
+                format: "checkbox",
+                title: "Subscribe to FN Morning Headlines"
+              },
+              top_headline: {
+                type: "boolean",
+                format: "checkbox",
+                title: "Subscribe to Top Morning Headlines"
+              }
+            }
+          }
+        });
+        const metadata = profile["https://example.com/metadata"];
+        //we make the true/false string in to a boolean
+        Object.keys(metadata).forEach(function (key) {
+            if (["true", "false"].includes(metadata[key])) {
+              metadata[key] = metadata[key] === "true";
+            }
+        })
+        profileEditor.setValue(metadata);
+        document.querySelector("#save-profile").addEventListener("click", function () {
+          swal.showLoading()
+          setUserProfile(profileEditor.getValue(), function () {
+            swal({ type: "success", title: "Saved!"});
+          })
+        });
         containerElement.appendChild(createLink("Logout","fnnauth0-logout",startLogout));
       });
     }
@@ -164,7 +220,7 @@
       }
     }
 
-    const getUserProfile= function(callback, useSilentLogin) {
+    const getUserProfile = function(callback, useSilentLogin) {
       if (!isAuthenticated()) return callback(new Error("The user has to login to get the profile"));
       useSilentLogin = useSilentLogin !==false;
 
@@ -175,6 +231,7 @@
       const token = retrieveAccessToken();
       getWebAuth(function(webAuth) {
         webAuth.client.userInfo(token, function(err, user) {
+          console.log(user);
           if (err) {
             if (useSilentLogin) {
               //Most likely access token has expired try silent login to renew
@@ -207,9 +264,16 @@
 
           mgmt.patchUserMetadata(authResult.idTokenPayload.sub, mapProfile(profile), function(err, user) {
             if (err) return callback(err);
+            // TODO This is a hack. Auth0 doesn't send us the updated user immediately.
+            setTimeout(function () {
+              // Reset the profile info because in the next call
+              // we want to update it from the remote source
+              storeProfile();
 
-            storeProfile();
-            getUserProfile(callback);
+              // Update from Auth0. Therefore, the profile
+              // object should be empty. (happening above)
+              getUserProfile(callback);
+            }, 10000)
           });
         });
       }));
@@ -307,7 +371,7 @@
     //Goal: silent login, browser compatible, newsletter integration, spot im integration, editing profile
 
 
-
+    //QUESTION: why is the format for adding metadata w/ url?
     //QUESTION: request.open('GET', '/authn/' + domain + ".json", false); --need to publish domain configs
     //TO DO: make pop up embeddable
     //TO DO: Make callback url permissions link dynamic
