@@ -387,3 +387,22 @@
 
     //link to user profile currently: http://www.foxnews.com/community/user/profile/edit
 
+//REWRITES FOR USER PROFILE & LOGIN PAGES REFERENCE
+// http://jira.nyc.foxnews.com/browse/FOX-30091?focusedCommentId=391096&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-391096
+
+// The edit profile page for the currently logged in user 
+// Public: http://www.foxnews.com/community/user/profile/edit 
+// Origin: foxnews.com/static/v/all/html/edit-profile.html
+
+// The full profile activity page for a user (Origin file not yet on server) 
+// Public: [uuid]" class="external-link">http://www.foxnews.com/community/user/profile/[uuid] 
+// Origin: foxnews.com/static/v/all/html/profile-activity.html
+
+// Landing page for password reset 
+// Public: http://www.foxnews.com/community/user/password-reset 
+// Origin: foxnews.com/static/v/all/html/password-reset.html
+
+// Landing page for verify email 
+// Public: http://www.foxnews.com/community/user/verify-email 
+// Origin: foxnews.com/static/v/all/html/email-verification.html
+
