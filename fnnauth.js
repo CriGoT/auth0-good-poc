@@ -68,7 +68,10 @@
     const setResult = function(callback) {
       return function(err, authResult) {
         storeAccessToken(authResult && authResult.accessToken);
-        //storeProfile();
+
+        //this is removing the cached version of the profile
+        //optimizing it by checking if id token exists, otherwise we don't need to call it
+        storeProfile(authResult && authResult.idTokenPayload);
         callback(err, authResult);
       }
     }
@@ -265,7 +268,9 @@
           mgmt.patchUserMetadata(authResult.idTokenPayload.sub, mapProfile(profile), function(err, user) {
             if (err) return callback(err);
             // we get a new token to get the updated profile
-            silentLogin(setResult(getUserProfile.bind(null,callback,false)));
+            silentLogin(setResult(function(){
+              getUserProfile(callback);
+            }));
           });
         });
       }));
