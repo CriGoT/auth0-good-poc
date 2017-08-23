@@ -264,16 +264,8 @@
 
           mgmt.patchUserMetadata(authResult.idTokenPayload.sub, mapProfile(profile), function(err, user) {
             if (err) return callback(err);
-            // TODO This is a hack. Auth0 doesn't send us the updated user immediately.
-            setTimeout(function () {
-              // Reset the profile info because in the next call
-              // we want to update it from the remote source
-              storeProfile();
-
-              // Update from Auth0. Therefore, the profile
-              // object should be empty. (happening above)
-              getUserProfile(callback);
-            }, 10000)
+            // we get a new token to get the updated profile
+            silentLogin(setResult(getUserProfile.bind(null,callback,false)));
           });
         });
       }));
