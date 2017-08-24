@@ -1,0 +1,9 @@
+body[data-auth="false"] .hide-login,
+body[data-auth="true"] .show-login {
+  display: initial;
+}
+
+body[data-auth="false"] .show-login,
+body[data-auth="true"] .hide-login {
+ display: none;
+}

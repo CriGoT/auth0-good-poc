@@ -1,17 +1,36 @@
 <html>
 
 <head>
-    <title>Sample Page</title>
+    <title>Profile Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
-    <div id="login-container"></div>
+<body data-auth="false">
+    <div id="profile" class="show-login">
+      Welcome!
+<br>
+      <img src="" data-user-field="picture" /><br>
+      <p>
+        <strong>Email:</strong>
+        <span data-user-field="email"></span>
+      </p>
+      <div>
+        <button id="change-pass">Change password</button>
+      </div>
+
+      <div id="profile-editor">
+      </div>
+      <button id='save-profile'>Save Profile</button>
+    </div>
+    <div id="login-container" class="hide-login">
+      Please login
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/json-editor/0.7.28/jsoneditor.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script>
     <script src="fnnauth.js"></script>
     <script>
-    FNNAuth.initialize('login-container');
+    FNNAuth.initialize('profile', 'login-container');
     </script>
 </body>
 

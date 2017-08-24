@@ -14,6 +14,10 @@
     var webAuth;
     var initialized;
     var options;
+  
+    const setAuthAttributeInBody = function () {
+      document.body.setAttribute("data-auth", isAuthenticated().toString())
+    }
 
     const isElement = function(e) {
       return typeof HTMLElement === "object" ? e instanceof HTMLElement : e && typeof e === "object" && e.nodeType === 1 && typeof e.nodeName==="string";
@@ -65,13 +69,15 @@
     const retrieveProfile = retrieve.bind(null,storageProfileKey);
     const retrieveTargetUrl = retrieve.bind(null,storageTargetUrlKey);
 
-    const setResult = function(callback) {
+    const setResult = function(callback, updateProfile) {
       return function(err, authResult) {
         storeAccessToken(authResult && authResult.accessToken);
 
         //this is removing the cached version of the profile
         //optimizing it by checking if id token exists, otherwise we don't need to call it
-        storeProfile(authResult && authResult.idTokenPayload);
+        if (updateProfile) {
+          storeProfile(authResult && authResult.idTokenPayload);
+        }
         callback(err, authResult);
       }
     }
@@ -95,8 +101,50 @@
           return renderLoginBox();
         }
 
-        containerElement.innerHTML = "<div id='fnnauth-userinfo'></div><button id='save-profile'>Save Profile</button>";
-        var profileEditor = new JSONEditor(document.getElementById('fnnauth-userinfo'), {
+
+
+        document.getElementById("change-pass").addEventListener("click", function () {
+        swal({
+          title: 'Really? :D',
+          text: "Do you really want to change your password?",
+          type: 'question',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes!',
+          cancelButtonText: 'No, cancel!'
+        }).then(function () {
+          swal.showLoading();
+          getWebAuth(function (webAuth){
+            webAuth.changePassword({
+              connection: 'Username-Password-Authentication',
+              email: profile.email
+            }, function (err, resp) {
+              if(err){
+                err.message = err.description
+                swal({ type: "error", title: "Whoups!", text: err.message})
+              }else{
+                swal({ type: "success", title: "Yay!", text: "Check your inbox."})
+              }
+            });
+          });
+        })
+        
+      })
+
+        var elements = document.querySelectorAll("[data-user-field]");
+        for (var i = elements.length - 1; i >= 0; i--) {
+           var el = elements[i];
+           var field = el.getAttribute("data-user-field");
+           var value = profile[field] || profile["https://example.com/" + field]
+           if (el.tagName === "IMG") {
+            el.setAttribute("src", value)
+           } else {
+            el.textContent = value;
+           }
+        }
+
+        var profileEditor = new JSONEditor(document.getElementById('profile-editor'), {
           disable_edit_json: true,
           disable_collapse: true,
           disable_properties: true,
@@ -104,6 +152,14 @@
             type: "object",
             title: "Your Profile: @" + profile["https://example.com/nickname"],
             properties: {
+              display_name: {
+                title: "Display Name",
+                type: "string"
+              },
+              birthday: {
+                title: "Birthday",
+                type: "string"
+              },
               party: {
                 title: "Party",
                 type: "string",
@@ -145,6 +201,9 @@
               metadata[key] = metadata[key] === "true";
             }
         })
+
+        metadata.display_name = metadata.display_name || "";
+        metadata.birthday = metadata.birthday || "";
         profileEditor.setValue(metadata);
         document.querySelector("#save-profile").addEventListener("click", function () {
           swal.showLoading()
@@ -152,13 +211,14 @@
             swal({ type: "success", title: "Saved!"});
           })
         });
-        containerElement.appendChild(createLink("Logout","fnnauth0-logout",startLogout));
+        
       });
     }
 
     const renderLoginBox = function() {
-      containerElement.innerHTML="";
-      containerElement.appendChild(createLink("Login","fnnauth0-login",startLogin));
+      //containerElement.innerHTML="";
+
+      //containerElement.appendChild();
     }
 
     const loadAuth0js = function(callback) {
@@ -184,11 +244,12 @@
       });
     }
 
-    const auth0Logout = function() {
+    const auth0Logout = function(cb) {
       getWebAuth(function (webAuth) {
         const iframe = document.createElement("iframe");
         iframe.style.display="none";
         iframe.src= webAuth.client.buildLogoutUrl();
+        iframe.onload = cb;
         document.body.appendChild(iframe);
         setTimeout(function() {
           document.body.removeChild(iframe);
@@ -200,8 +261,12 @@
       if (e) e.preventDefault();
       storeAccessToken();
       storeProfile();
-      renderLoginBox();
-      setTimeout(auth0Logout,50);
+      swal.showLoading();
+      auth0Logout(function () {
+        location.reload();
+      })
+      //renderLoginBox();
+      //setTimeout(auth0Logout,50);
     }
 
     const startLogin = function(e) {
@@ -209,6 +274,13 @@
 
       storeTargetUrl(window.location.href);
       getWebAuth(function(webAuth){
+        // QUESTION: options.popup.ignoreCasing = true
+// Alice True
+// First: Alice
+// Last: [x] 
+
+// Question: storing boolean values, without converting into strings?
+//           subscribed: false instead of "false"
         webAuth.popup.authorize(options.popup, setResult(authnCallback));
       });
     }
@@ -221,6 +293,7 @@
         console.log("Login completed successfully");
         renderUserInfo();
       }
+      setAuthAttributeInBody();
     }
 
     const getUserProfile = function(callback, useSilentLogin) {
@@ -270,7 +343,7 @@
             // we get a new token to get the updated profile
             silentLogin(setResult(function(){
               getUserProfile(callback);
-            }));
+            }, true));
           });
         });
       }));
@@ -296,16 +369,19 @@
       }
     }
 
-    const initialize = function(element) {
-      if (!element) throw new Error("You must provide an HTML Element or an eleent id to include the authentication information");
+    const initialize = function(profileElSel, loginElSel) {
       if (initialized) throw new Error("The instance is already initialized");
-
-      if (typeof element === "string") element = document.getElementById(element);
-      if (!isElement(element)) throw new Error("The object you passed is not an HTML Element nor the ID of one");
-
-      containerElement = element;
+      
       initialized = true;
 
+      
+      profileElement = document.getElementById(profileElSel)
+      loginElement = document.getElementById(loginElSel)
+
+      loginElement.appendChild(createLink("Login","fnnauth0-login",startLogin));
+      profileElement.appendChild(createLink("Logout","fnnauth0-logout",startLogout));
+      
+      setAuthAttributeInBody();
       if (isAuthenticated()) {
         renderUserInfo();
       } else {
@@ -325,14 +401,9 @@
     FNNAuth.prototype.getUserProfile = getUserProfile;
     FNNAuth.prototype.setUserProfile = setUserProfile;
 
-    const staticInitialize = function(domain, element) {
-      if (!element) {
-        element = domain;
-        domain = undefined;
-      }
-
+    const staticInitialize = function(profileElement, loginElement, domain) {
       const instance = new FNNAuth(domain);
-      instance.initialize(element);
+      instance.initialize(profileElement, loginElement);
     }
 
     const handleCallback = function(domain){
@@ -368,7 +439,7 @@
     //Goal: silent login, browser compatible, newsletter integration, spot im integration, editing profile
 
 
-    //QUESTION: why is the format for adding metadata w/ url?
+    //QUESTION: How to edit fields outside of user_metadata
     //QUESTION: request.open('GET', '/authn/' + domain + ".json", false); --need to publish domain configs
     //TO DO: make pop up embeddable
     //TO DO: Make callback url permissions link dynamic
