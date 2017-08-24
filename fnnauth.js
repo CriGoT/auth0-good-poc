@@ -122,7 +122,7 @@
             }, function (err, resp) {
               if(err){
                 err.message = err.description
-                swal({ type: "error", title: "Whoups!", text: err.message})
+                swal({ type: "error", title: "Whoops!", text: err.message})
               }else{
                 swal({ type: "success", title: "Yay!", text: "Check your inbox."})
               }
@@ -152,14 +152,14 @@
             type: "object",
             title: "Your Profile: @" + profile["https://example.com/nickname"],
             properties: {
-              display_name: {
-                title: "Display Name",
-                type: "string"
-              },
-              birthday: {
-                title: "Birthday",
-                type: "string"
-              },
+              // display_name: {
+              //   title: "Display Name",
+              //   type: "string"
+              // },
+              // birthday: {
+              //   title: "Birthday",
+              //   type: "string"
+              // },
               party: {
                 title: "Party",
                 type: "string",
@@ -202,8 +202,8 @@
             }
         })
 
-        metadata.display_name = metadata.display_name || "";
-        metadata.birthday = metadata.birthday || "";
+        // metadata.display_name = metadata.display_name || "";
+        // metadata.birthday = metadata.birthday || "";
         profileEditor.setValue(metadata);
         document.querySelector("#save-profile").addEventListener("click", function () {
           swal.showLoading()
