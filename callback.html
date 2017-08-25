@@ -10,12 +10,16 @@
       }
       parent.postMessage(window.location.hash, origin);
     } else {
-      const script = document.createElement("script");
-      script.src = "fnnauth.js";
-      script.onload = function () {
+      function script(url) {
+        const script = document.createElement("script");
+        script.src = url;
+        document.head.appendChild(script);
+        return script;
+      }
+      script("options.js");
+      script("fnnauth.js").onload = function () {
         window.FNNAuth.handleCallback();
       };
-      document.head.appendChild(script);
     }
   </script>
 </head>
