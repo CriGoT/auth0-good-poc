@@ -1,9 +1,59 @@
 body[data-auth="false"] .hide-login,
 body[data-auth="true"] .show-login {
-  display: initial;
+    display: initial;
 }
 
 body[data-auth="false"] .show-login,
 body[data-auth="true"] .hide-login {
- display: none;
+    display: none;
+}
+
+
+
+
+/*********************** PROFILE ************************/
+
+body {
+    background-color: #F0F0F0;
+    margin: 30px;
+}
+
+#profile {
+    width: 500px;
+    padding: 24px;
+    margin: 25px 0 0;
+    background: #fff;
+    -webkit-box-shadow: 0 0 6px #999;
+    -moz-box-shadow: 0 0 6px #999;
+    box-shadow: 0 0 6px #999;
+}
+
+#accounts-header {
+    border-bottom: 2px solid #242424;
+    margin: 0 0 24px;
+}
+
+#profile-header {
+  
+}
+
+#profile-controls {
+
+    margin-left: 15px;
+    display: inline-block;
+    width: 200px;
+    vertical-align: top;
+}
+
+#profile-image {
+    display: inline-block;
+     vertical-align: middle;
+    border: 2px solid #000;
+}
+
+#display-name {
+    font-size: 36px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 10px;
 }

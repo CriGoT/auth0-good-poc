@@ -143,16 +143,16 @@
         disable_properties: true,
         schema: {
           type: "object",
-          title: "Your Profile: @" + profile["https://example.com/nickname"],
+          title: "Profile",
           properties: {
-            // display_name: {
-            //   title: "Display Name",
-            //   type: "string"
-            // },
-            // birthday: {
-            //   title: "Birthday",
-            //   type: "string"
-            // },
+            first_name: {
+              title: "First Name",
+              type: "string"
+            },
+            last_name: {
+              title: "Last Name",
+              type: "string"
+            },
             party: {
               title: "Party",
               type: "string",
@@ -201,8 +201,8 @@
           }
       })
 
-      // metadata.display_name = metadata.display_name || "";
-      // metadata.birthday = metadata.birthday || "";
+      metadata.first_name = metadata.first_name || "";
+      metadata.last_name = metadata.last_name || "";
       profileEditor.setValue(metadata);
 
       // Save the metadata, when we click on the save button
@@ -460,6 +460,8 @@
     //QUESTION: How to edit fields outside of user_metadata
     //QUESTION: request.open('GET', '/authn/' + domain + ".json", false); --need to publish domain configs
     //TO DO: make pop up embeddable
+    //TO DO: fix bug with spacing before certain fields on lock sign up module
+    //TO DO: make username unique
     //TO DO: Make callback url permissions link dynamic
     //TO DO: allow users to edit their profile
     //TO DO: linking users
