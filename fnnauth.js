@@ -12,7 +12,7 @@
   if (root.FNNAuth) {
     return
   }
-  
+
   var domain;
   var containerElement;
   var webAuth;
@@ -21,10 +21,6 @@
 
   const setAuthAttributeInBody = function () {
     document.body.setAttribute("data-auth", isAuthenticated().toString())
-  }
-
-  const isElement = function(e) {
-    return typeof HTMLElement === "object" ? e instanceof HTMLElement : e && typeof e === "object" && e.nodeType === 1 && typeof e.nodeName==="string";
   }
 
   const getDomainOptions = function(domain) {
@@ -212,7 +208,12 @@
       // Save the metadata, when we click on the save button
       document.querySelector("#save-profile").addEventListener("click", function () {
         swal.showLoading()
-        setUserProfile(profileEditor.getValue(), function () {
+        var value = profileEditor.getValue()
+        //if (value....) {
+          // update newsletter preferences
+          // value.fn_subscribe...
+        //}
+        setUserProfile(value, function () {
           swal({ type: "success", title: "Saved!"});
         })
       });
@@ -250,6 +251,7 @@
       iframe.src= webAuth.client.buildLogoutUrl();
       iframe.onload = cb;
       document.body.appendChild(iframe);
+
       setTimeout(function() {
         document.body.removeChild(iframe);
       }, 1500);
@@ -258,6 +260,8 @@
 
   const startLogout =function(e) {
     if (e) e.preventDefault();
+
+    // Empty the storage data (by not passing anything)
     storeAccessToken();
     storeProfile();
     swal.showLoading();
@@ -324,10 +328,6 @@
     });
   }
 
-  const mapProfile = function(profile) {
-    return profile
-  };
-
   // Use the management constructor to patch the user metadata
   // and store the the updated profile in the storage
   const setUserProfile = function(profile, callback) {
@@ -342,7 +342,7 @@
           token: authResult.idToken
         });
 
-        mgmt.patchUserMetadata(authResult.idTokenPayload.sub, mapProfile(profile), function(err, user) {
+        mgmt.patchUserMetadata(authResult.idTokenPayload.sub, profile, function(err, user) {
           if (err) return callback(err);
           // we get a new token to get the updated profile
           silentLogin(setResult(function(){
