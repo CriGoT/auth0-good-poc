@@ -98,16 +98,55 @@
       swal.showLoading();
       getWebAuth(function (webAuth){
         // This will send an email
-        webAuth.changePassword({
-          connection: 'Username-Password-Authentication',
-          email: profile.email
-        }, function (err, resp) {
-          if(err){
-            err.message = err.description
-            swal({ type: "error", title: "Whoops!", text: err.message})
-          }else{
-            swal({ type: "success", title: "Yay!", text: "Check your inbox."})
+        getUserProfile(function (err, profile) {
+          if (err) {
+            err.message = err.message || err.description
+            return swal({ type: "error", title: "Whoops!", text: err.message})
           }
+          webAuth.changePassword({
+            connection: 'Username-Password-Authentication',
+            email: profile.email
+          }, function (err, resp) {
+            if(err){
+              err.message = err.description
+              swal({ type: "error", title: "Whoops!", text: err.message})
+            } else {
+              swal({ type: "success", title: "Yay!", text: "Check your inbox."})
+            }
+          });
+        });
+      });
+    })
+  }
+
+  const deleteAccount = function () {
+    swal({
+      title: 'Delete Account',
+      text: "Are you sure you want to delete your account?",
+      type: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes!',
+      cancelButtonText: 'No, cancel!'
+    }).then(function () {
+      swal.showLoading();
+      getUserManagement(function (mgmt) {
+        getUserProfile(function (err, profile) {
+          if (err) {
+            err.message = err.message || err.description
+            return swal({ type: "error", title: "Whoops!", text: err.message})
+          }
+          mgmt.users.delete({
+            id: profile["https://example.com/user_id"]
+          }, function (err) {
+            if(err){
+              err.message = err.description
+              swal({ type: "error", title: "Whoops!", text: err.message})
+            } else {
+              swal({ type: "success", title: "Sorry to see you go!", text: "Byeee"})
+            }
+          });
         });
       });
     })
@@ -122,7 +161,17 @@
 
       // Handle change password
       document.getElementById("change-pass").addEventListener("click", changePassword)
-
+      document.getElementById("delete-account").addEventListener("click", deleteAccount)
+      var backBtn = document.getElementById("back-button");
+      // Hide the back button if the previous page is not on the same domain
+      if (document.referrer.indexOf(location.hostname) === -1) {
+        backBtn.style.display = "none";
+      } else {
+        backBtn.addEventListener("click", function () {
+            history.go(-1); 
+        })
+      }
+      
       // Display dynamic fields in the profile, using the data-user-field attribute
       var elements = document.querySelectorAll("[data-user-field]");
       for (var i = elements.length - 1; i >= 0; i--) {
@@ -149,11 +198,19 @@
           properties: {
             first_name: {
               title: "First Name",
-              type: "string"
+              type: "string",
+              default: ""
+            },
+            email: {
+              title: "Email",
+              type: "string",
+              readOnly: true,
+              default: profile.email
             },
             last_name: {
               title: "Last Name",
-              type: "string"
+              type: "string",
+              default: ""
             },
             party: {
               title: "Party",
@@ -164,34 +221,40 @@
                 "independent",
                 "republican",
                 "conservative"
-              ]
+              ],
+              default: "independent"
             },
             fb_breaking_alerts: {
               type: "boolean",
               format: "checkbox",
-              title: "Subscribe to FB Breaking Alerts"
+              title: "Subscribe to FB Breaking Alerts",
+              default: false
             },
             fn_breaking_alerts: {
               type: "boolean",
               format: "checkbox",
-              title: "Subscribe to FN Breaking Alerts"
+              title: "Subscribe to FN Breaking Alerts",
+              visible: true,
+              default: false
             },
             fn_morn_headlines: {
               type: "boolean",
               format: "checkbox",
-              title: "Subscribe to FN Morning Headlines"
+              title: "Subscribe to FN Morning Headlines",
+              default: false,
             },
             top_headline: {
               type: "boolean",
               format: "checkbox",
-              title: "Subscribe to Top Morning Headlines"
+              title: "Subscribe to Top Morning Headlines",
+              default: false
             }
           }
         }
       });
 
       // Get the metadata
-      const metadata = profile["https://example.com/metadata"];
+      const metadata = profile["https://example.com/metadata"] || {};
 
       // We make the true/false string in to a boolean
       // TODO: This is a hack
@@ -203,14 +266,30 @@
           }
       })
 
-      metadata.first_name = metadata.first_name || "";
-      metadata.last_name = metadata.last_name || "";
+      
+      // Set the default fields
+      Object.keys(profileEditor.schema.properties).forEach(function (cProp) {
+        var def = profileEditor.schema.properties[cProp].default
+        if (def !== undefined && metadata[cProp] === undefined) {
+          metadata[cProp] = def;
+        }
+      })
+
       profileEditor.setValue(metadata);
 
       // Save the metadata, when we click on the save button
       document.querySelector("#save-profile").addEventListener("click", function () {
         swal.showLoading()
         var value = profileEditor.getValue()
+        
+        // Delete the disabled fields from the value
+        //deleting read only fields from the object sent to auth 0
+        Object.keys(profileEditor.schema.properties).forEach(function (cProp) {
+          if (profileEditor.schema.properties[cProp].readOnly) {
+            delete value[cProp]
+          }
+        })
+
         //if (value....) {
           // update newsletter preferences
           // value.fn_subscribe...
@@ -330,6 +409,18 @@
     });
   }
 
+  const getUserManagement = function (cb) {
+    silentLogin(setResult(function(err, authResult) {
+      loadAuth0js(function() {
+        const mgmt = new root.auth0.Management({
+          domain: options.default.domain,
+          token: authResult.idToken
+        });
+        cb(mgmt)
+      });
+    }));
+  }
+
   // Use the management constructor to patch the user metadata
   // and store the the updated profile in the storage
   const setUserProfile = function(profile, callback) {
@@ -337,13 +428,7 @@
 
     silentLogin(setResult(function(err, authResult) {
       if (!isAuthenticated()) return callback(new Error("The user has to login to set the profile"));
-      loadAuth0js(function() {
-
-        const mgmt = new root.auth0.Management({
-          domain: options.default.domain,
-          token: authResult.idToken
-        });
-
+      getUserManagement(function (mgmt) {
         mgmt.patchUserMetadata(authResult.idTokenPayload.sub, profile, function(err, user) {
           if (err) return callback(err);
           // we get a new token to get the updated profile
@@ -385,8 +470,8 @@
     loginElement = document.getElementById(loginElSel)
 
     // Create the login/logout buttons
-    loginElement.appendChild(createLink("Login","fnnauth0-login",startLogin));
-    profileElement.appendChild(createLink("Logout","fnnauth0-logout",startLogout));
+    loginElement.appendChild(createLink("Login","btn fnnauth0-login",startLogin));
+    document.getElementById("change-pass").parentElement.insertBefore(createLink("Logout","btn fnnauth0-logout",startLogout), document.getElementById("change-pass"));
     
     // Set auth state in the body element
     setAuthAttributeInBody();
@@ -458,7 +543,7 @@
     //TO DO: make UI using vue.js
     //Goal: silent login, browser compatible, newsletter integration, spot im integration, editing profile
 
-    //TO DO: fix change password since it's broken
+    //QUESTION: How to delete user?
     //QUESTION: How to edit fields outside of user_metadata
     //QUESTION: How to edit profile when account is social
     //QUESTION: resize social media login images for user profile
@@ -467,11 +552,9 @@
     //TO DO: fix bug with spacing before certain fields on lock sign up module
     //TO DO: make username unique
     //TO DO: Make callback url permissions link dynamic
-    //TO DO: allow users to edit their profile
     //TO DO: linking users
     //TO DO: connect newsletter 
     //TO DO: add 'rules'
-    //TO DO: add links to the terms & conditions
     //TO DO: connect with spot IM commenting
     //TO DO: have a file where we can save revision for login form
     //TO DO: way to easily migrate users
