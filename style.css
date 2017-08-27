@@ -44,6 +44,13 @@ body {
   
 }
 
+#profile-editor div div{
+  /*disable default json editor values*/
+/*    padding-left: 0px;
+    margin-left: 0px;
+    border-left: none;*/
+}
+
 #profile-controls {
 
     margin-left: 15px;
@@ -59,8 +66,14 @@ body {
 
 #profile-image {
     display: inline-block;
-     vertical-align: middle;
+    vertical-align: middle;
     border: 2px solid #000;
+}
+
+/*temporary fix for social media images that are not the same size*/
+#profile-image img {
+    width: 120px;
+    height: 120px;
 }
 
 #display-name {

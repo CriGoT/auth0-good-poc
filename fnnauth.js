@@ -86,8 +86,8 @@
 
   const changePassword = function () {
     swal({
-      title: 'Really? :D',
-      text: "Do you really want to change your password?",
+      title: 'Change Password',
+      text: "Are you sure you want to change your password?",
       type: 'question',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -137,10 +137,12 @@
       }
 
       // Set up the jsoneditor
+      // https://github.com/jdorn/json-editor
       var profileEditor = new JSONEditor(document.getElementById('profile-editor'), {
         disable_edit_json: true,
         disable_collapse: true,
         disable_properties: true,
+        theme: 'barebones',
         schema: {
           type: "object",
           title: "Profile",
@@ -456,8 +458,10 @@
     //TO DO: make UI using vue.js
     //Goal: silent login, browser compatible, newsletter integration, spot im integration, editing profile
 
-
+    //TO DO: fix change password since it's broken
     //QUESTION: How to edit fields outside of user_metadata
+    //QUESTION: How to edit profile when account is social
+    //QUESTION: resize social media login images for user profile
     //QUESTION: request.open('GET', '/authn/' + domain + ".json", false); --need to publish domain configs
     //TO DO: make pop up embeddable
     //TO DO: fix bug with spacing before certain fields on lock sign up module
@@ -465,7 +469,6 @@
     //TO DO: Make callback url permissions link dynamic
     //TO DO: allow users to edit their profile
     //TO DO: linking users
-    //TO DO: user profiles
     //TO DO: connect newsletter 
     //TO DO: add 'rules'
     //TO DO: add links to the terms & conditions
