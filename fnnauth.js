@@ -20,7 +20,7 @@
   var options;
 
   const setAuthAttributeInBody = function () {
-    document.body.setAttribute("data-auth", isAuthenticated().toString())
+    document.body.setAttribute("data-auth", isAuthenticated().toString());
   }
 
   const getDomainOptions = function(domain) {
@@ -160,8 +160,8 @@
       }
 
       // Handle change password
-      document.getElementById("change-pass").addEventListener("click", changePassword)
-      document.getElementById("delete-account").addEventListener("click", deleteAccount)
+      document.getElementById("change-pass").addEventListener("click", changePassword);
+      // document.getElementById("delete-account").addEventListener("click", deleteAccount);
       var backBtn = document.getElementById("back-button");
       // Hide the back button if the previous page is not on the same domain
       if (document.referrer.indexOf(location.hostname) === -1) {
@@ -196,6 +196,12 @@
           type: "object",
           title: "Profile",
           properties: {
+            nickname: {
+              title: "Display Name",
+              type: "string",
+              readOnly: true,
+              default: profile.nickname
+            },
             first_name: {
               title: "First Name",
               type: "string",
@@ -550,6 +556,8 @@
     //QUESTION: request.open('GET', '/authn/' + domain + ".json", false); --need to publish domain configs
     //TO DO: make pop up embeddable
     //TO DO: fix bug with spacing before certain fields on lock sign up module
+    //TO DO: add conditional for social login to not be able to change password
+    //TO DO: build forgot password functionality
     //TO DO: make username unique
     //TO DO: Make callback url permissions link dynamic
     //TO DO: linking users
