@@ -470,8 +470,8 @@
     loginElement = document.getElementById(loginElSel)
 
     // Create the login/logout buttons
-    loginElement.appendChild(createLink("Login","btn fnnauth0-login",startLogin));
-    document.getElementById("change-pass").parentElement.insertBefore(createLink("Logout","btn fnnauth0-logout",startLogout), document.getElementById("change-pass"));
+    loginElement.appendChild(createLink("Login","fnnauth0-login",startLogin));
+    document.getElementById("change-pass").parentElement.insertBefore(createLink("Log Out","fnnauth0-logout",startLogout), document.getElementById("change-pass"));
     
     // Set auth state in the body element
     setAuthAttributeInBody();

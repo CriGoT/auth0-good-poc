@@ -56,11 +56,19 @@ body {
 }
 
 #profile-controls {
-
     margin-left: 15px;
     display: inline-block;
     width: 200px;
     vertical-align: top;
+}
+
+#profile-controls > a {
+    display: block;
+    padding-left: 28px;
+    font: 700 14px arial,sans-serif;
+    color: #183a52;
+    margin: 0 0 6px;
+    cursor: pointer;
 }
 
 #profile-controls #back-button {
