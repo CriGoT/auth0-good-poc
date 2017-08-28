@@ -218,6 +218,10 @@
               type: "string",
               default: ""
             },
+            zip_code: {
+              title: "Zip Code",
+              type: "string",
+            },
             party: {
               title: "Political Views",
               type: "string",
@@ -554,6 +558,7 @@
     //QUESTION: How to edit profile when account is social
     //QUESTION: resize social media login images for user profile
     //QUESTION: request.open('GET', '/authn/' + domain + ".json", false); --need to publish domain configs
+    //TO DO: can you add a date field to the sign up form
     //TO DO: make pop up embeddable
     //TO DO: fix bug with spacing before certain fields on lock sign up module
     //TO DO: add conditional for social login to not be able to change password
