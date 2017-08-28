@@ -211,7 +211,7 @@
               title: "Email",
               type: "string",
               readOnly: true,
-              default: profile.email
+              default: profile.email || ""
             },
             last_name: {
               title: "Last Name",
@@ -221,6 +221,7 @@
             zip_code: {
               title: "Zip Code",
               type: "string",
+              default: ""
             },
             party: {
               title: "Political Views",
