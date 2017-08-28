@@ -217,3 +217,35 @@ select {
     text-transform: capitalize;
     /*text-align: center;*/
 }
+
+.profile-footer {
+    width: 700px;
+    margin: 31px 0 0 -5px;
+    padding: 24px 0 0;
+    border-top: 1px solid #bbb;
+}
+
+.profile-footer p {
+    font: 400 11px arial,sans-serif;
+    color: #999;
+    margin: 0 0 3px;
+    padding: 0;
+}
+
+.profile-footer p a {
+    color: #183a52;
+    text-decoration: none;
+}
+
+.fox-logo {
+    width: 60px;
+    height: 56px;
+    margin: 0 12px;
+/*    background: url(/static/v/all/img/live-fyre/fn-logo-footer.png) no-repeat;*/
+background: url(/images/fn-logo-footer.png) no-repeat;
+    float: left;
+}
+
+
+
+

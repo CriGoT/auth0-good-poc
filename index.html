@@ -20,17 +20,17 @@
                         <span data-user-field="nickname"></span>
                     </div>
                     <a id="change-pass">Change Password</a>
-                  <!--   <a id="delete-account">Delete Account</a> -->
+                    <!--   <a id="delete-account">Delete Account</a> -->
                     <div id="back-button" class="btn"><span></span>Back</div>
                 </div>
             </div>
             <div id="profile-editor"></div>
             <div>
-            <h3>Newsletter Subscriptions</h3>
-            <div class="hr"></div>
+                <h3>Newsletter Subscriptions</h3>
+                <div class="hr"></div>
             </div>
-            <button id='save-profile'class="btn" >Save Profile</button>
-     <!--        <div class="newsletter-container">
+            <button id='save-profile' class="btn">Save Profile</button>
+            <!--        <div class="newsletter-container">
             <h3>Newsletter Subscriptions</h3>
             <div class="hr"></div>
             <div class="news-sub-form">
@@ -48,20 +48,24 @@
                 <label for="fn-fired"><input type="checkbox" name="" id="foxnewsletterIDList_99" value="">Fox Nation Fired Up</label>
                 <label for="halftime-report "><input type="checkbox" name="" id="foxnewsletterIDList_261" value="">Halftime Report</label>
             </div> -->
+            <div class="profile-footer">
+                <div class="fox-logo"></div>
+                <p>&copy2015 FOX News Network, LLC. All rights reserved.</p>
+                <p>This material may not be published, broadcast, rewritten, or redistributed.</p>
+                <p>All market data delayed 20 minutes.</p>
+                <p><a href="//www.foxnews.com/about/privacy-policy" target="_blank">Privacy</a> - <a href="//www.foxnews.com/about/terms-of-use" target="_blank">Terms</a> - <a href="//help.foxnews.com/index.html" target="_blank">FAQ</a></p>
+            </div>
         </div>
-            <div class="profile-footer"></div>
+        <div id="login-container" class="hide-login">
+            <h1>Please login</h1>
         </div>
-    </div>
-    <div id="login-container" class="hide-login">
-        <h1>Please login</h1>
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/json-editor/0.7.28/jsoneditor.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script>
-    <script src="options.js"></script>
-    <script src="fnnauth.js"></script>
-    <script>
-    FNNAuth.initialize('profile', 'login-container');
-    </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/json-editor/0.7.28/jsoneditor.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script>
+        <script src="options.js"></script>
+        <script src="fnnauth.js"></script>
+        <script>
+        FNNAuth.initialize('profile', 'login-container');
+        </script>
 </body>
 
 </html>
