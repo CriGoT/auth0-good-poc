@@ -137,6 +137,10 @@ div[data-schematype="string"] label {
 
 div[data-schematype="boolean"] {
     margin-left: 40px;
+    width: 273px;
+    font: 400 14px arial,sans-serif;
+    color: #000;
+    margin: 0 0 12px;
 }
 
 div[data-schemapath="root.party"] {
