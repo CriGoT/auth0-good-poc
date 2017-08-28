@@ -100,6 +100,10 @@ body {
     margin-bottom: 10px;
 }
 
+#change-pass {
+   /* background: url(/static/v/all/img/live-fyre/icons.png) 0 -38px no-repeat;*/
+    background: url(/images/icons.png) 0 -38px no-repeat;
+}
 
 
 /* JSON Editor */
@@ -174,7 +178,8 @@ button#save-profile {
 }
 
 #back-button span {
-    background: url(/static/v/all/img/live-fyre/arrow-white.png) no-repeat;
+   /* background: url(/static/v/all/img/live-fyre/arrow-white.png) no-repeat;*/
+    background: url(/images/arrow-white.png) no-repeat;
     height: 6px;
     width: 14px;
     display: inline-block;
@@ -191,7 +196,8 @@ select {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
-    background: url(http://www.foxnews.com/static/v/all/img/live-fyre/down-arrow.png) 96% 50% no-repeat;
+    /*background: url(/static/v/all/img/live-fyre/down-arrow.png) 96% 50% no-repeat;*/
+    background: url(/images/down-arrow.png) 96% 50% no-repeat;
     -moz-appearance: none;
     font-size: 13px;
     font-family: Helvetica, sans-serif;
