@@ -119,38 +119,38 @@
     })
   }
 
-  const deleteAccount = function () {
-    swal({
-      title: 'Delete Account',
-      text: "Are you sure you want to delete your account?",
-      type: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes!',
-      cancelButtonText: 'No, cancel!'
-    }).then(function () {
-      swal.showLoading();
-      getUserManagement(function (mgmt) {
-        getUserProfile(function (err, profile) {
-          if (err) {
-            err.message = err.message || err.description
-            return swal({ type: "error", title: "Whoops!", text: err.message})
-          }
-          mgmt.users.delete({
-            id: profile["https://example.com/user_id"]
-          }, function (err) {
-            if(err){
-              err.message = err.description
-              swal({ type: "error", title: "Whoops!", text: err.message})
-            } else {
-              swal({ type: "success", title: "Sorry to see you go!", text: "Byeee"})
-            }
-          });
-        });
-      });
-    })
-  }
+  // const deleteAccount = function () {
+  //   swal({
+  //     title: 'Delete Account',
+  //     text: "Are you sure you want to delete your account?",
+  //     type: 'question',
+  //     showCancelButton: true,
+  //     confirmButtonColor: '#3085d6',
+  //     cancelButtonColor: '#d33',
+  //     confirmButtonText: 'Yes!',
+  //     cancelButtonText: 'No, cancel!'
+  //   }).then(function () {
+  //     swal.showLoading();
+  //     getUserManagement(function (mgmt) {
+  //       getUserProfile(function (err, profile) {
+  //         if (err) {
+  //           err.message = err.message || err.description
+  //           return swal({ type: "error", title: "Whoops!", text: err.message})
+  //         }
+  //         mgmt.users.delete({
+  //           id: profile["https://example.com/user_id"]
+  //         }, function (err) {
+  //           if(err){
+  //             err.message = err.description
+  //             swal({ type: "error", title: "Whoops!", text: err.message})
+  //           } else {
+  //             swal({ type: "success", title: "Sorry to see you go!", text: "Byeee"})
+  //           }
+  //         });
+  //       });
+  //     });
+  //   })
+  // }
 
   const renderUserInfo = function(){
     getUserProfile(function (err, profile) {
@@ -200,7 +200,7 @@
               title: "Display Name",
               type: "string",
               readOnly: true,
-              default: profile.nickname
+              default: profile["https://example.com/nickname"]
             },
             first_name: {
               title: "First Name",
@@ -219,7 +219,7 @@
               default: ""
             },
             party: {
-              title: "Party",
+              title: "Political Views",
               type: "string",
               enum: [
                 "liberal",

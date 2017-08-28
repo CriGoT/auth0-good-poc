@@ -200,6 +200,10 @@ select {
     -moz-box-shadow: 0 4px 5px -3px rgba(0, 0, 0, .1) inset;
     -webkit-box-shadow: 0 4px 5px -3px rgba(0, 0, 0, .1) inset;
     box-shadow: 0 4px 5px -3px rgba(0, 0, 0, .1) inset;
-    background-color: #fff;
+    background-color: #f6f6f6;
     padding: 9px 0 9px 6px;
+    vertical-align: middle;
+    display: inline-block;
+    text-transform: capitalize;
+    /*text-align: center;*/
 }
