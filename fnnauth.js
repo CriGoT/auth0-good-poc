@@ -7,7 +7,7 @@
 
   const storage = root.sessionStorage;
   const document = root.document;
-  const auth0jslocation = "http://cdn.auth0.com/js/auth0/8.9.2/auth0.min.js";
+  const auth0jslocation = "https://cdn.auth0.com/js/auth0/8.9.2/auth0.min.js";
 
   if (root.FNNAuth) {
     return
