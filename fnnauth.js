@@ -286,6 +286,13 @@
         }
       })
 
+      //style the user form 
+      const lineUserProfile = `<div class='hr'></div>`;
+      const stylingNewsletterUserProfile = `<div><h3>Newsletter Subscriptions</h3>${lineUserProfile}</div>`;
+
+      $('h3 span').append(lineUserProfile);
+      $('div[data-schemapath="root.party"]').html(stylingNewsletterUserProfile);
+
       profileEditor.setValue(metadata);
 
       // Save the metadata, when we click on the save button
