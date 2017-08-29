@@ -227,11 +227,11 @@
               title: "Gender",
               type: "string",
               enum: [
-                "not_specified",
+                "Not Specified",
                 "male",
                 "femlae"
               ],
-              default: "not_specified"
+              default: "Not Specified"
             },
             party: {
               title: "Political Views",
