@@ -546,18 +546,6 @@
 
 
 
-    // www.foxnews.com/portal/newsalertsubscribe
-    // $.ajax({
-    //     type: "POST",
-    //     url: "/portal/newsalertsubscribe",
-    //     data: ({ slids: SLID, email: email, format: "html" }),
-    //     dataType: "text"
-    // }).done(function() {
-    //     ISA.track({ "email-sign-up-success": { listName: list } });
-    // });
-
-
-
     //TO DO: make UI using vue.js
     //Goal: silent login, browser compatible, newsletter integration, spot im integration, editing profile
 
@@ -568,9 +556,10 @@
     //QUESTION: request.open('GET', '/authn/' + domain + ".json", false); --need to publish domain configs
     //TO DO: can you add a date field to the sign up form
     //TO DO: make pop up embeddable
+    //TO DO: update metadata for social sign in profile
+    //TO DO: put user profile syling in conditional
     //TO DO: fix bug with spacing before certain fields on lock sign up module
     //TO DO: add conditional for social login to not be able to change password
-    //TO DO: build forgot password functionality
     //TO DO: make username unique
     //TO DO: Make callback url permissions link dynamic
     //TO DO: linking users
@@ -582,25 +571,4 @@
     //TO DO: clean up hosted login page on dashboard
     //TO DO: add official logo
 
-
-    //link to user profile currently: http://www.foxnews.com/community/user/profile/edit
-
-//REWRITES FOR USER PROFILE & LOGIN PAGES REFERENCE
-// http://jira.nyc.foxnews.com/browse/FOX-30091?focusedCommentId=391096&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-391096
-
-// The edit profile page for the currently logged in user 
-// Public: http://www.foxnews.com/community/user/profile/edit 
-// Origin: foxnews.com/static/v/all/html/edit-profile.html
-
-// The full profile activity page for a user (Origin file not yet on server) 
-// Public: [uuid]" class="external-link">http://www.foxnews.com/community/user/profile/[uuid] 
-// Origin: foxnews.com/static/v/all/html/profile-activity.html
-
-// Landing page for password reset 
-// Public: http://www.foxnews.com/community/user/password-reset 
-// Origin: foxnews.com/static/v/all/html/password-reset.html
-
-// Landing page for verify email 
-// Public: http://www.foxnews.com/community/user/verify-email 
-// Origin: foxnews.com/static/v/all/html/email-verification.html
 
