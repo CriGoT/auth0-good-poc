@@ -15,7 +15,7 @@ window.DOMAIN_OPTIONS = {
       //"ignoreCasing": true
     }
   },
-   "lindahaviv.github.io":{
+   "lindahaviv.github.io/auth0-good-poc":{
     "default" : {
       "domain" : "testing-foxnews.auth0.com",
       "clientID": "3ys8tHNcg8hzzUeV-nizksE1lYw3bvBX",
