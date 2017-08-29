@@ -200,28 +200,33 @@
               title: "Display Name",
               type: "string",
               readOnly: true,
-              default: profile["https://example.com/nickname"]
+              default: profile["https://example.com/nickname"],
+              "propertyOrder": 1
             },
             first_name: {
               title: "First Name",
               type: "string",
-              default: ""
+              default: "",
+              "propertyOrder": 2
             },
             email: {
               title: "Email",
               type: "string",
               readOnly: true,
-              default: profile.email || ""
+              default: profile.email || "",
+              "propertyOrder": 4
             },
             last_name: {
               title: "Last Name",
               type: "string",
-              default: ""
+              default: "",
+              "propertyOrder": 3
             },
             zip_code: {
               title: "Zip Code",
               type: "string",
-              default: ""
+              default: "",
+              "propertyOrder": 5
             },
             gender: {
               title: "Gender",
@@ -229,9 +234,10 @@
               enum: [
                 "Not Specified",
                 "male",
-                "femlae"
+                "female"
               ],
-              default: "Not Specified"
+              default: "Not Specified",
+              "propertyOrder": 6
             },
             party: {
               title: "Political Views",
@@ -243,7 +249,8 @@
                 "republican",
                 "conservative"
               ],
-              default: "independent"
+              default: "independent",
+              "propertyOrder": 7
             },
             fb_breaking_alerts: {
               type: "boolean",
