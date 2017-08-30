@@ -8,6 +8,7 @@
   const storage = root.sessionStorage;
   const document = root.document;
   const auth0jslocation = "https://cdn.auth0.com/js/auth0/8.9.2/auth0.min.js";
+  const locklocation = "https://cdn.auth0.com/js/lock/10.20.0/lock.js";
 
   if (root.FNNAuth) {
     return
@@ -16,6 +17,7 @@
   var domain;
   var containerElement;
   var webAuth;
+  var lock;
   var initialized;
   var options;
 
@@ -31,7 +33,9 @@
     return options;
   }
 
-  const loadJs = function(src, callback) {
+  const loadJs = function(check, src, callback) {
+    if (root[check]) return callback();
+
     const script = document.createElement("script");
     script.onload = callback;
     script.src = src;
@@ -319,18 +323,28 @@
     });
   }
 
-  const loadAuth0js = function(callback) {
-    if (!root.auth0) {
-      loadJs(auth0jslocation,callback);
-    } else {
-      callback();
-    }
-  }
+  const loadAuth0js = loadJs.bind(null,'auth0', auth0jslocation);
+  const loadAuth0Lock = loadJs.bind(null,'Auth0Lock', locklocation);
 
   const getWebAuth = function(callback) {
     loadAuth0js(function() {
       webAuth = webAuth || new root.auth0.WebAuth(options.default);
       callback(webAuth);
+    });
+  }
+
+  const getAuth0Lock = function(callback) {
+    loadAuth0Lock(function() {
+      const lockOptions = options.lock || {};
+      lockOptions.auth = {
+        redirect: false,
+        responseType: options.default.responseType,
+        params: {
+          scope: options.default.scope
+        }
+      };
+      lock = lock || new root.Auth0Lock(options.default.clientID, options.default.domain, lockOptions);
+      callback(lock);
     });
   }
 
@@ -373,19 +387,14 @@
     if (e) e.preventDefault();
 
     storeTargetUrl(window.location.href);
-    getWebAuth(function(webAuth){
-      // QUESTION: options.popup.ignoreCasing = true
-      // Alice True
-      // First: Alice
-      // Last: [x] 
-
-      // Question: storing boolean values, without converting into strings?
-      //           subscribed: false instead of "false"
-      webAuth.popup.authorize(options.popup, setResult(authnCallback));
+    getAuth0Lock(function(lock){
+      lock.on("authenticated",  setResult(authnCallback).bind(null,null));
+      lock.show();
     });
   }
 
   const authnCallback = function(err, authResult) {
+    if (lock) lock.hide();
     if (err || !authResult || !authResult.accessToken) {
       console.log("Unsuccessful attempt to login", err, authResult);
     } else {
@@ -529,7 +538,7 @@
     options = getDomainOptions(domain || root.location.hostname);
     getWebAuth(function (webAuth){
         webAuth.popup.callback();
-        setTimeout(root.close,500);
+        //setTimeout(root.close,2500);
     });
   }
 
