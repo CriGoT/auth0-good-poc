@@ -208,14 +208,20 @@
               default: profile.email || "",
               "propertyOrder": 4
             },
-            newsletter_email: {
-              title: "Newsletter Email",
+            //T0 DO: make the display name unique
+            display_name: {
+              title: "Display Name",
               type: "string",
-              default: profile.email || "",
-              "propertyOrder": 4.1,
-              pattern: EMAIL_RE,
-              //required: true
+              default: ""
             },
+            // newsletter_email: {
+            //   title: "Newsletter Email",
+            //   type: "string",
+            //   default: profile.email || "",
+            //   "propertyOrder": 4.1,
+            //   pattern: EMAIL_RE,
+            //   //required: true
+            // },
             last_name: {
               title: "Last Name",
               type: "string",
@@ -224,6 +230,12 @@
             },
             zip_code: {
               title: "Zip Code",
+              type: "string",
+              default: "",
+              "propertyOrder": 5.1
+            },
+            birthday: {
+              title: "Birthday",
               type: "string",
               default: "",
               "propertyOrder": 5
@@ -320,6 +332,7 @@
       const lineUserProfile = `<div class='hr'></div>`;
       const stylingNewsletterUserProfile = `<div><h3>Newsletter Subscriptions</h3>${lineUserProfile}</div>`;
 
+      //TODO: make this append once only
       $('h3 span').append(lineUserProfile);
       $('div[data-schemapath="root.party"]').append(stylingNewsletterUserProfile);
 
