@@ -246,6 +246,10 @@ background: url(/auth0-good-poc/images/fn-logo-footer.png) no-repeat;
     float: left;
 }
 
-
-
-
+.errmsg { display: none !important; }
+div#errors > .error {
+    background: red;
+    color: white;
+    padding: 10px;
+    margin: 13px 0;
+}

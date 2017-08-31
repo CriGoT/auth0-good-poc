@@ -152,14 +152,8 @@
   //   })
   // }
 
-  const renderUserInfo = function(){
-    getUserProfile(function (err, profile) {
-      if (err) {
-        console.error("Error retrieving the user profile", err);
-        return;
-      }
-
-      // Handle change password
+  const profileHandlers = function (profile) {
+     // Handle change password
       document.getElementById("change-pass").addEventListener("click", changePassword);
       // document.getElementById("delete-account").addEventListener("click", deleteAccount);
       var backBtn = document.getElementById("back-button");
@@ -171,28 +165,26 @@
             history.go(-1); 
         })
       }
-      
-      // Display dynamic fields in the profile, using the data-user-field attribute
-      var elements = document.querySelectorAll("[data-user-field]");
-      for (var i = elements.length - 1; i >= 0; i--) {
-         var el = elements[i];
-         var field = el.getAttribute("data-user-field");
-         var value = profile[field] || profile["https://example.com/" + field]
-         if (el.tagName === "IMG") {
-          el.setAttribute("src", value)
-         } else {
-          el.textContent = value;
-         }
-      }
+  }
 
-      // Set up the jsoneditor
-      // https://github.com/jdorn/json-editor
-      var profileEditor = new JSONEditor(document.getElementById('profile-editor'), {
-        disable_edit_json: true,
-        disable_collapse: true,
-        disable_properties: true,
-        theme: 'barebones',
-        schema: {
+  const renderProfileFields = function (profile) {
+     // Display dynamic fields in the profile, using the data-user-field attribute
+    var elements = document.querySelectorAll("[data-user-field]");
+    for (var i = elements.length - 1; i >= 0; i--) {
+       var el = elements[i];
+       var field = el.getAttribute("data-user-field");
+       var value = profile[field] || profile["https://example.com/" + field]
+       if (el.tagName === "IMG") {
+        el.setAttribute("src", value)
+       } else {
+        el.textContent = value;
+       }
+    }
+  }
+
+  const getProfileSchema = function (profile) {
+    const EMAIL_RE = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    return {
           type: "object",
           title: "Profile",
           properties: {
@@ -215,6 +207,14 @@
               readOnly: true,
               default: profile.email || "",
               "propertyOrder": 4
+            },
+            newsletter_email: {
+              title: "Newsletter Email",
+              type: "string",
+              default: profile.email || "",
+              "propertyOrder": 4.1,
+              pattern: EMAIL_RE,
+              //required: true
             },
             last_name: {
               title: "Last Name",
@@ -279,6 +279,19 @@
             }
           }
         }
+  }
+
+  const setupProfileEditor = function (profile) {
+
+      // Set up the jsoneditor
+      // https://github.com/jdorn/json-editor
+      var profileEditor = new JSONEditor(document.getElementById('profile-editor'), {
+        disable_edit_json: true,
+        disable_collapse: true,
+        disable_properties: true,
+        theme: 'barebones',
+        // show_errors: "always",
+        schema: getProfileSchema(profile)
       });
 
       // Get the metadata
@@ -314,7 +327,25 @@
 
       // Save the metadata, when we click on the save button
       document.querySelector("#save-profile").addEventListener("click", function () {
+        
+        var errors = profileEditor.validate()
+        var errorsContainer = document.querySelector("#errors")
+        errorsContainer.innerHTML = "";
+        if (errors.length) {
+          errors.forEach(function (err) {
+            if (err.path === "root.newsletter_email") {
+              err.message = "Invalid newsletter email";
+            }
+            err.elm = document.createElement("div")
+            err.elm.textContent = err.message;
+            err.elm.setAttribute("class", "error");
+            errorsContainer.appendChild(err.elm);
+          })
+          
+          return;
+        }
         swal.showLoading()
+
         var value = profileEditor.getValue()
         
         // Delete the disabled fields from the value
@@ -333,6 +364,18 @@
           swal({ type: "success", title: "Saved!"});
         })
       });
+  }
+
+  const renderUserInfo = function(){
+    getUserProfile(function (err, profile) {
+      if (err) {
+        console.error("Error retrieving the user profile", err);
+        return;
+      }
+
+      profileHandlers(profile)
+      renderProfileFields(profile)
+      setupProfileEditor(profile);
     });
   }
 
@@ -571,6 +614,9 @@
     //QUESTION: How to edit profile when account is social
     //QUESTION: resize social media login images for user profile
     //QUESTION: request.open('GET', '/authn/' + domain + ".json", false); --need to publish domain configs
+    //TO DO: how to add validators for user metadata
+    //TO DO: Newsletter email validator
+    //TO DO: prompt user to fill newsletter email field if empty
     //TO DO: can you add a date field to the sign up form
     //TO DO: make pop up embeddable
     //TO DO: update metadata for social sign in profile
