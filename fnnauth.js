@@ -249,7 +249,7 @@
                 "republican",
                 "conservative"
               ],
-              default: "independent",
+              default: "",
               "propertyOrder": 7
             },
             fb_breaking_alerts: {
