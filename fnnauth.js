@@ -333,7 +333,7 @@
       const stylingNewsletterUserProfile = `<div><h3>Newsletter Subscriptions</h3>${lineUserProfile}</div>`;
 
       //TODO: make this append once only
-      $('h3 span').append(lineUserProfile);
+      $('h3 span').empty().append(lineUserProfile);
       $('div[data-schemapath="root.party"]').append(stylingNewsletterUserProfile);
 
       profileEditor.setValue(metadata);
