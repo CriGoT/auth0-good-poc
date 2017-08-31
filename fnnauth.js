@@ -611,17 +611,17 @@
 
     //QUESTION: How to delete user?
     //QUESTION: How to edit fields outside of user_metadata
-    //QUESTION: How to edit profile when account is social
-    //QUESTION: resize social media login images for user profile
+
     //QUESTION: request.open('GET', '/authn/' + domain + ".json", false); --need to publish domain configs
-    //TO DO: how to add validators for user metadata
+    //TO DO: how to add validators for user metadata --use webtasks
     //TO DO: Newsletter email validator
     //TO DO: prompt user to fill newsletter email field if empty
     //TO DO: can you add a date field to the sign up form
     //TO DO: make pop up embeddable
+    //T0 DO: validate metadata currently using rule in js before sending back to auth 0
+    //TO DO: fix appended formatting by clearing user profile div
     //TO DO: update metadata for social sign in profile
-    //TO DO: put user profile syling in conditional
-    //TO DO: fix bug with spacing before certain fields on lock sign up module
+    //T0 DO: edit placeholder text for login.
     //TO DO: add conditional for social login to not be able to change password
     //TO DO: make username unique
     //TO DO: Make callback url permissions link dynamic
