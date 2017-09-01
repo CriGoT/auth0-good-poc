@@ -189,13 +189,13 @@
             type: "object",
             title: "Profile",
             properties: {
-                nickname: {
-                    title: "Display Name",
-                    type: "string",
-                    readOnly: true,
-                    default: profile["https://example.com/nickname"],
-                    "propertyOrder": 1
-                },
+                // nickname: {
+                //     title: "Display Name",
+                //     type: "string",
+                //     readOnly: true,
+                //     default: profile["https://example.com/nickname"],
+                //     "propertyOrder": 1
+                // },
                 first_name: {
                     title: "First Name",
                     type: "string",
@@ -213,7 +213,8 @@
                 display_name: {
                     title: "Display Name",
                     type: "string",
-                    default: ""
+                    default: "",
+                    propertyOrder: 1
                 },
                 // newsletter_email: {
                 //   title: "Newsletter Email",
