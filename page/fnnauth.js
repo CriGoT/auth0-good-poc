@@ -8,6 +8,7 @@
     const storage = root.sessionStorage;
     const document = root.document;
     const auth0jslocation = "https://cdn.auth0.com/js/auth0/8.9.2/auth0.min.js";
+    const profileApiUrl = "https://crigot.us.webtask.io/myprofile";
 
     if (root.FNNAuth) {
         return
@@ -379,7 +380,7 @@
             // update newsletter preferences
             // value.fn_subscribe...
             //}
-            setUserProfile(value, function() {
+            setUserProfileApi(value, function() {
                 swal({ type: "success", title: "Saved!" });
             })
         });
@@ -537,6 +538,49 @@
         }));
     }
 
+    const callProfileApi = function(method, body, callback) {
+        if (callback==undefined) {
+            callback = body;
+            body = undefined;
+        }
+
+        if (!isAuthenticated()) return callback(new Error("The user has to login to set the profile"));
+
+        silentLogin(setResult(function(err, authResult) {
+            if (!isAuthenticated()) return callback(new Error("The user has to login to set the profile"));
+
+            const req = new XMLHttpRequest()
+            req.open(method, profileApiUrl);
+            req.setRequestHeader('Authorization', 'Bearer ' + retrieveAccessToken());
+            req.setRequestHeader('Content-type', 'application/json');
+            req.onreadystatechange = function() {
+             if (req.readyState==4) {
+                if (req.status >= 400 ) return callback(new Error(req.responseText));
+                callback(null, req.responseText && JSON.parse(req.responseText));
+              }
+            };
+            try {
+              req.send(body && JSON.stringify(body));
+            } catch(e) {
+              callback(e);
+            }
+        }));
+    };
+
+    const deleteUserProfileApi = function(callback) {
+        callProfileApi("DELETE", callback);
+    };
+
+    const setUserProfileApi = function(profile, callback) {
+        callProfileApi("PATCH",{user_metadata:profile}, function(err, data) {
+            if (err) return callback(err);
+            // we get a new token to get the updated profile
+            silentLogin(setResult(function() {
+                 getUserProfile(callback);
+            }, true));
+        });
+    }
+
     const isAuthenticated = function() {
         return !!retrieveAccessToken();
     }
@@ -593,7 +637,7 @@
     FNNAuth.prototype.login = login;
     FNNAuth.prototype.isAuthenticated = isAuthenticated;
     FNNAuth.prototype.getUserProfile = getUserProfile;
-    FNNAuth.prototype.setUserProfile = setUserProfile;
+    FNNAuth.prototype.setUserProfile = setUserProfileApi;
 
     const staticInitialize = function(profileElement, loginElement, domain) {
         const instance = new FNNAuth(domain);
