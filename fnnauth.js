@@ -14,6 +14,7 @@
     }
 
     var domain;
+    var redirect;
     var containerElement;
     var webAuth;
     var initialized;
@@ -398,11 +399,18 @@
         });
     }
 
+    const createWebAuth = function() {
+        webAuth = webAuth || new auth0.WebAuth(options.default);
+        return webAuth;
+   }
+
     const loadAuth0js = function(callback) {
         if (!root.auth0) {
-            loadJs(auth0jslocation, callback);
+            loadJs(auth0jslocation, function () {
+                callback(createWebAuth());
+        });
         } else {
-            callback();
+            callback(createWebAuth());
         }
     }
 
@@ -460,7 +468,7 @@
 
             // Question: storing boolean values, without converting into strings?
             //           subscribed: false instead of "false"
-            webAuth.popup.authorize(options.popup, setResult(authnCallback));
+           webAuth.authorize(options.authorize);
         });
     }
 
@@ -582,8 +590,9 @@
     }
 
     // Class Constructor
-    const FNNAuth = function(domainName) {
+    const FNNAuth = function(domainName, useRedirect) {
         domain = domainName || root.location.hostname;
+        redirect = useRedirect!==false ;
         initialized = false;
         options = getDomainOptions(domain);
     };
@@ -595,8 +604,8 @@
     FNNAuth.prototype.getUserProfile = getUserProfile;
     FNNAuth.prototype.setUserProfile = setUserProfile;
 
-    const staticInitialize = function(profileElement, loginElement, domain) {
-        const instance = new FNNAuth(domain);
+    const staticInitialize = function(profileElement, loginElement, domain, redirect) {
+        const instance = new FNNAuth(domain, redirect);
         instance.initialize(profileElement, loginElement);
     };
 
@@ -607,8 +616,11 @@
     const handleCallback = function(domain) {
         options = getDomainOptions(domain || root.location.hostname);
         getWebAuth(function(webAuth) {
-            webAuth.popup.callback();
-            setTimeout(root.close, 500);
+          webAuth.parseHash(setResult(function(err, authResult) {
+            const redirect = retrieveTargetUrl() || root.location.origin;
+            storeTargetUrl();
+            root.location.href = redirect;
+          }));
         });
     }
 
