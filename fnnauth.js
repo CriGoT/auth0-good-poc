@@ -17,7 +17,6 @@
     var redirect;
     var containerElement;
     var webAuth;
-    var initialized;
     var options;
 
     const setAuthAttributeInBody = function() {
@@ -422,7 +421,6 @@
     }
 
     const silentLogin = function(callback) {
-        if (!initialized) throw new Error('You have to initialize the instance before trying to use it');
 
         // Renew auth (basically, login)
         getWebAuth(function(webAuth) {
@@ -430,17 +428,31 @@
         });
     }
 
+
+// User/Password  
+//                    ------- Sign in/up ---> check if agreed terms (callback.html)
+// Google/Facebook                            |    |
+//                                            |    v
+//                                            YES  NO
+//                                            |     Show the after sign up page
+//                                            |     Agree
+//                                            |     |
+//                                            |     |
+//                                             \    v
+//                                              \-> Yaaay
+
+
     const auth0Logout = function(cb) {
         getWebAuth(function(webAuth) {
             const iframe = document.createElement("iframe");
             iframe.style.display = "none";
             iframe.src = webAuth.client.buildLogoutUrl();
-            iframe.onload = cb;
+            iframe.onload = iframe.onerror = cb;
             document.body.appendChild(iframe);
-
+/*
             setTimeout(function() {
                 document.body.removeChild(iframe);
-            }, 1500);
+            }, 1500);*/
         });
     }
 
@@ -566,9 +578,6 @@
     }
 
     const initialize = function(profileElSel, loginElSel) {
-        if (initialized) throw new Error("The instance is already initialized");
-
-        initialized = true;
 
         // Get elements from the DOM, based on the ids
         profileElement = document.getElementById(profileElSel)
@@ -593,7 +602,6 @@
     const FNNAuth = function(domainName, useRedirect) {
         domain = domainName || root.location.hostname;
         redirect = useRedirect!==false ;
-        initialized = false;
         options = getDomainOptions(domain);
     };
 
@@ -617,9 +625,35 @@
         options = getDomainOptions(domain || root.location.hostname);
         getWebAuth(function(webAuth) {
           webAuth.parseHash(setResult(function(err, authResult) {
-            const redirect = retrieveTargetUrl() || root.location.origin;
-            storeTargetUrl();
-            root.location.href = redirect;
+            if (err) { return showError(err) }
+            var redirectUser = function () {
+                const redirect = retrieveTargetUrl() || root.location.origin;
+                storeTargetUrl();
+                root.location.href = redirect;
+            }
+            getUserProfile(function(err, profile) {
+                if (err) { return showError(err) }
+                var metadata = profile["https://example.com/metadata"];
+                if (metadata.agreed_terms) {
+                    return redirectUser()
+                }
+                document.body.classList.remove("hide");
+                document.querySelector("form.new-user").addEventListener("submit", function (e) {
+                     e.preventDefault()
+                    var checkEl = document.getElementById("checkboxTerms")
+                    if (!checkEl.checked) {
+                      alert("You have to agree!!!!");
+                      return;
+                    }  
+                    var firstName = document.getElementById("first_name")
+                    metadata.agreed_terms = true;
+                    metadata.first_name = firstName.value;
+                    setUserProfile(metadata, function () {
+                        redirectUser();    
+                    })
+                })
+            });
+            
           }));
         });
     }

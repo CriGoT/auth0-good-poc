@@ -15,7 +15,9 @@ body[data-auth="true"] .hide-login {
 
 
 
-
+.hide {
+    display: none;
+}
 
 /*********************** PROFILE ************************/
 

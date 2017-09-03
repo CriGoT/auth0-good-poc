@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link rel="stylesheet" href="style.css">
   <script type="text/javascript">
     if (window.parent!==window.self) {
       try {
@@ -10,18 +11,41 @@
       }
       parent.postMessage(window.location.hash, origin);
     } else {
-      function script(url) {
-        const script = document.createElement("script");
-        script.src = url;
-        document.head.appendChild(script);
-        return script;
+      function script(url, cb) {
+        if (Array.isArray(url)) {
+          var complete = 0;
+          url.forEach(function (cUrl) {
+            script(cUrl, function () {
+              if (++complete === url.length) {
+                cb()
+              }
+            })
+          })
+        }
+
+        var scriptEl = document.createElement("script");
+        scriptEl.src = url;
+        scriptEl.onload = cb;
+        document.head.appendChild(scriptEl);
+        return scriptEl;
       }
-      script("options.js");
-      script("fnnauth.js").onload = function () {
+
+      script(["options.js", "fnnauth.js"], function () {
         window.FNNAuth.handleCallback();
-      };
+      });
     }
   </script>
 </head>
-<body></body>
+<body class="hide">
+  <form class="new-user">
+     <div>
+        <input type="text" id="first_name" placeholder="First name">
+        <label>
+          <input type="checkbox" class="form-control" id="checkboxTerms" name="termsCheckbox" />
+          I agree!!!!
+      </label>
+      </div>
+      <button type="submit">Proceed</button>
+  </form>
+</body>
 </html>
