@@ -21,6 +21,7 @@
               }
             })
           })
+          return
         }
 
         var scriptEl = document.createElement("script");
@@ -30,7 +31,11 @@
         return scriptEl;
       }
 
-      script(["options.js", "fnnauth.js"], function () {
+      script([
+        "https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js",
+        "options.js",
+        "fnnauth.js"
+      ], function () {
         window.FNNAuth.handleCallback();
       });
     }
@@ -40,6 +45,7 @@
   <form class="new-user">
      <div>
         <input type="text" id="first_name" placeholder="First name">
+        <input type="text" id="display_name" placeholder="Display name">
         <label>
           <input type="checkbox" class="form-control" id="checkboxTerms" name="termsCheckbox" />
           I agree!!!!

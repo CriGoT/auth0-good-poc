@@ -8,6 +8,8 @@
     const storage = root.sessionStorage;
     const document = root.document;
     const auth0jslocation = "https://cdn.auth0.com/js/auth0/8.9.2/auth0.min.js";
+    const profileApiUrl = "https://testing-foxnews.us.webtask.io/userprofile";
+ 
 
     if (root.FNNAuth) {
         return
@@ -19,9 +21,55 @@
     var webAuth;
     var options;
 
+    const showError = function (err) {
+        swal({
+            type: "error",
+            title: "Whoups!",
+            text: err.message || err
+        });
+    }
+
     const setAuthAttributeInBody = function() {
         document.body.setAttribute("data-auth", isAuthenticated().toString());
     }
+
+    const callProfileApi = function(method, body, callback) {
+        if (callback==undefined) {
+            callback = body;
+            body = undefined;
+        }
+
+        if (!isAuthenticated()) return callback(new Error("The user has to login to set the profile"));
+
+        silentLogin(setResult(function(err, authResult) {
+            if (!isAuthenticated()) return callback(new Error("The user has to login to set the profile"));
+
+            const req = new XMLHttpRequest()
+            req.open(method, profileApiUrl);
+            req.setRequestHeader('Authorization', 'Bearer ' + retrieveAccessToken());
+            req.setRequestHeader('Content-type', 'application/json');
+            req.onreadystatechange = function() {
+             if (req.readyState==4) {
+                if (req.status >= 400 ) {
+                    var err = req.responseText
+                    try {
+                        err = JSON.parse(err)
+                        err = err.message || err.error
+                    } catch (e) {}
+
+                    return callback(new Error(err))
+                }
+                callback(null, req.responseText && JSON.parse(req.responseText));
+              }
+            };
+            try {
+              req.send(body && JSON.stringify(body));
+            } catch(e) {
+              callback(e);
+            }
+        }));
+    };
+
 
     const getDomainOptions = function(domain) {
         if (!options) {
@@ -119,43 +167,52 @@
         })
     }
 
-    // const deleteAccount = function () {
-    //   swal({
-    //     title: 'Delete Account',
-    //     text: "Are you sure you want to delete your account?",
-    //     type: 'question',
-    //     showCancelButton: true,
-    //     confirmButtonColor: '#3085d6',
-    //     cancelButtonColor: '#d33',
-    //     confirmButtonText: 'Yes!',
-    //     cancelButtonText: 'No, cancel!'
-    //   }).then(function () {
-    //     swal.showLoading();
-    //     getUserManagement(function (mgmt) {
-    //       getUserProfile(function (err, profile) {
-    //         if (err) {
-    //           err.message = err.message || err.description
-    //           return swal({ type: "error", title: "Whoops!", text: err.message})
-    //         }
-    //         mgmt.users.delete({
-    //           id: profile["https://example.com/user_id"]
-    //         }, function (err) {
-    //           if(err){
-    //             err.message = err.description
-    //             swal({ type: "error", title: "Whoops!", text: err.message})
-    //           } else {
-    //             swal({ type: "success", title: "Sorry to see you go!", text: "Byeee"})
-    //           }
-    //         });
-    //       });
-    //     });
-    //   })
-    // }
+    const deleteUserProfileApi = function(callback) {
+        callProfileApi("DELETE", callback);
+    };
+
+    const deleteAccount = function () {
+      swal({
+        title: 'Delete Account',
+        text: "Are you sure you want to delete your account?",
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes!',
+        cancelButtonText: 'No, cancel!'
+      }).then(function () {
+
+        setTimeout(function () {
+            swal.showLoading();
+            getUserManagement(function (mgmt) {
+              getUserProfile(function (err, profile) {
+                if (err) {
+                  err.message = err.message || err.description
+                  return swal({ type: "error", title: "Whoops!", text: err.message})
+                }
+
+                deleteUserProfileApi(function (err) {
+                  if(err){
+                    err.message = err.description
+                    swal({ type: "error", title: "Whoops!", text: err.message})
+                  } else {
+                    swal({ type: "success", title: "Sorry to see you go!", text: "Byeee"}).then(function () {
+                        startLogout();
+                    })
+                  }
+                });
+              });
+            });
+        }, 1000)
+        
+      })
+    }
 
     const profileHandlers = function(profile) {
         // Handle change password
         document.getElementById("change-pass").addEventListener("click", changePassword);
-        // document.getElementById("delete-account").addEventListener("click", deleteAccount);
+        document.getElementById("delete-account").addEventListener("click", deleteAccount);
         var backBtn = document.getElementById("back-button");
         // Hide the back button if the previous page is not on the same domain
         if (document.referrer.indexOf(location.hostname) === -1) {
@@ -298,6 +355,25 @@
 
     const setupProfileEditor = function(profile) {
 
+        
+
+        // Get the metadata
+        const metadata = profile["https://example.com/metadata"] || {};
+        if (!metadata.agreed_terms) {
+            startLogout();
+            document.body.classList.add("hide")
+            return;
+        }
+
+        var schema = getProfileSchema(profile);
+        Object.keys(metadata).forEach(function (key) {
+            if (!schema.properties[key]) {
+                schema.properties[key] = {
+                    hidden: true
+                };
+            }
+        })
+    
         // Set up the jsoneditor
         // https://github.com/jdorn/json-editor
         var profileEditor = new JSONEditor(document.getElementById('profile-editor'), {
@@ -306,11 +382,9 @@
             disable_properties: true,
             theme: 'barebones',
             // show_errors: "always",
-            schema: getProfileSchema(profile)
+            schema: schema
         });
 
-        // Get the metadata
-        const metadata = profile["https://example.com/metadata"] || {};
 
         // We make the true/false string in to a boolean
         // TODO: This is a hack
@@ -325,7 +399,11 @@
 
         // Set the default fields
         Object.keys(profileEditor.schema.properties).forEach(function(cProp) {
-            var def = profileEditor.schema.properties[cProp].default
+            var sch = profileEditor.schema.properties[cProp];
+            var def = sch.default
+            if (sch.hidden) {
+                document.querySelector("[data-schemapath=\"root." + cProp + "\"]").style.display = "none"
+            }
             if (def !== undefined && metadata[cProp] === undefined) {
                 metadata[cProp] = def;
             }
@@ -338,6 +416,7 @@
         //TODO: make this append once only
         $('h3 span').append(lineUserProfile);
         $('div[data-schemapath="root.party"]').append(stylingNewsletterUserProfile);
+
 
         profileEditor.setValue(metadata);
 
@@ -379,7 +458,10 @@
             // update newsletter preferences
             // value.fn_subscribe...
             //}
-            setUserProfile(value, function() {
+            setUserMetadata(value, function(err) {
+                if (err) {
+                    return showError(err);
+                }
                 swal({ type: "success", title: "Saved!" });
             })
         });
@@ -415,6 +497,7 @@
 
     const getWebAuth = function(callback) {
         loadAuth0js(function() {
+            //options.default.audience = "https://sso.foxnews.com/userinfo"
             webAuth = webAuth || new root.auth0.WebAuth(options.default);
             callback(webAuth);
         });
@@ -442,7 +525,7 @@
 //                                              \-> Yaaay
 
 
-    const auth0Logout = function(cb) {
+    const auth0Logout = window.auth0logout = function(cb) {
         getWebAuth(function(webAuth) {
             const iframe = document.createElement("iframe");
             iframe.style.display = "none";
@@ -538,12 +621,22 @@
         }));
     }
 
+    const setUserProfile = window.setUserProfile = function (profile, callback) {
+        callProfileApi("PATCH", profile, function(err, data) {
+            if (err) return callback(err);
+            // we get a new token to get the updated profile
+            silentLogin(setResult(function() {
+                 getUserProfile(callback);
+            }, true));
+        });
+    }
+
     // Use the management constructor to patch the user metadata
     // and store the the updated profile in the storage
-    const setUserProfile = function(profile, callback) {
+    const setUserMetadata = function(profile, callback) {
         if (!isAuthenticated()) return callback(new Error("The user has to login to set the profile"));
 
-        silentLogin(setResult(function(err, authResult) {
+        /*silentLogin(setResult(function(err, authResult) {
             if (!isAuthenticated()) return callback(new Error("The user has to login to set the profile"));
             getUserManagement(function(mgmt) {
                 mgmt.patchUserMetadata(authResult.idTokenPayload.sub, profile, function(err, user) {
@@ -554,7 +647,9 @@
                     }, true));
                 });
             });
-        }));
+        }));*/
+
+        setUserProfile({user_metadata:profile}, callback)
     }
 
     const isAuthenticated = function() {
@@ -610,7 +705,7 @@
     FNNAuth.prototype.login = login;
     FNNAuth.prototype.isAuthenticated = isAuthenticated;
     FNNAuth.prototype.getUserProfile = getUserProfile;
-    FNNAuth.prototype.setUserProfile = setUserProfile;
+    FNNAuth.prototype.setUserMetadata = setUserMetadata;
 
     const staticInitialize = function(profileElement, loginElement, domain, redirect) {
         const instance = new FNNAuth(domain, redirect);
@@ -637,18 +732,27 @@
                 if (metadata.agreed_terms) {
                     return redirectUser()
                 }
+
+                var firstName = document.getElementById("first_name")
+                var displayName = document.getElementById("display_name")
+                //display name in root that is used for prefilling field
+                displayName.value = profile["https://example.com/display_name"];
+
                 document.body.classList.remove("hide");
                 document.querySelector("form.new-user").addEventListener("submit", function (e) {
-                     e.preventDefault()
+                    e.preventDefault()
+                    swal.showLoading();
                     var checkEl = document.getElementById("checkboxTerms")
                     if (!checkEl.checked) {
-                      alert("You have to agree!!!!");
-                      return;
+                      return showError("You have to agree!!!!");
                     }  
-                    var firstName = document.getElementById("first_name")
                     metadata.agreed_terms = true;
                     metadata.first_name = firstName.value;
-                    setUserProfile(metadata, function () {
+                    metadata.display_name = displayName.value;
+                    setUserMetadata(metadata, function (err) {
+                        if (err) {
+                            return showError(err);
+                        }
                         redirectUser();    
                     })
                 })
