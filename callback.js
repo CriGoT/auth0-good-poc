@@ -84,7 +84,7 @@
       btnNext.onclick = function (e) {
         e.preventDefault();
         //add active class to progress bar
-        $("#progressbar li").eq($("fieldset").index(nextFieldset)).addClass("active");
+        $("#progressbar li").eq($("fieldset").index(fieldset)).addClass("active");
 
         var checkEl = fieldset.querySelector("#checkboxTerms");
         var birthday = fieldset.querySelector("#birthday");
