@@ -65,8 +65,8 @@
     if (!nextFieldset) {
       /* Submit */
     }
-    var btnNext = fieldset.querySelector(".btn-next")
-    var btnPrev = fieldset.querySelector(".btn-prev")
+    var btnNext = fieldset.querySelector(".btn-next");
+    var btnPrev = fieldset.querySelector(".btn-prev");
     var commonClick = function (e) {
       hide(fieldset);
     }

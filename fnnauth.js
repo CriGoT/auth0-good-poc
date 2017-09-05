@@ -24,7 +24,7 @@
     const showError = function (err) {
         swal({
             type: "error",
-            title: "Whoups!",
+            title: "Uh Oh",
             text: err.message || err
         });
     }
@@ -149,7 +149,7 @@
                 getUserProfile(function(err, profile) {
                     if (err) {
                         err.message = err.message || err.description
-                        return swal({ type: "error", title: "Whoops!", text: err.message })
+                        return swal({ type: "error", title: "Uh Oh", text: err.message })
                     }
                     webAuth.changePassword({
                         connection: 'Username-Password-Authentication',
@@ -157,9 +157,9 @@
                     }, function(err, resp) {
                         if (err) {
                             err.message = err.description
-                            swal({ type: "error", title: "Whoops!", text: err.message })
+                            swal({ type: "error", title: "Uh Oh", text: err.message })
                         } else {
-                            swal({ type: "success", title: "Yay!", text: "Check your inbox." })
+                            swal({ type: "success", title: "Success", text: "An email has been sent to your inbox." })
                         }
                     });
                 });
@@ -195,7 +195,7 @@
                 deleteUserProfileApi(function (err) {
                   if(err){
                     err.message = err.description
-                    swal({ type: "error", title: "Whoops!", text: err.message})
+                    swal({ type: "error", title: "uh oh", text: err.message})
                   } else {
                     swal({ type: "success", title: "Sorry to see you go!", text: ""}).then(function () {
                         startLogout();
