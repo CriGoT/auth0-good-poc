@@ -1,6 +1,6 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css");
 
-body {
+body:not(.signup) {
     font-family: Arial, sans-serif;
 }
 
@@ -23,14 +23,14 @@ body[data-auth="true"] .hide-login {
 
 /*********************** SIGN UP ************************/
 
-body,
+body.signup,
 html {
     height: 100%;
     background-color: #f9f9f9;
 }
 
-h3,
-h5 {
+body.signup h3,
+body.signup h5 {
     color: #002e56;
     font-weight: 300;
 }
@@ -48,7 +48,7 @@ label {
 .signup-box {
     position: absolute;
     top: 50%;
-   /* transform: translateY(-50%);*/
+    transform: translateY(-50%);
     padding: 15px;
     background-color: #fff;
     box-shadow: 0px 5px 5px #ccc;
@@ -170,12 +170,12 @@ div#profile-editor>div>div {
 
 /* Styling */
 
-input[type='text'] {
+input[type='text']:not(.form-control) {
     font: 400 14px arial, sans-serif;
     color: #000;
     margin: 2px 5px;
     width: 288px!important;
-    padding: 8px 0 8px 12px!important
+    padding: 8px 0 8px 12px!important;
 }
 
 div[data-schematype="string"] label {

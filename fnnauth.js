@@ -734,7 +734,11 @@
                 }
 
                 var firstName = document.getElementById("first_name")
+                var lastName = document.getElementById("last_name")
                 var displayName = document.getElementById("display_name")
+                var birthday = document.getElementById("birthday")
+
+
                 //display name in root that is used for prefilling field
                 displayName.value = profile["https://example.com/display_name"];
 
@@ -742,13 +746,13 @@
                 document.querySelector("form.new-user").addEventListener("submit", function (e) {
                     e.preventDefault()
                     swal.showLoading();
-                    var checkEl = document.getElementById("checkboxTerms")
-                    if (!checkEl.checked) {
-                      return showError("You have to agree!!!!");
-                    }  
-                    metadata.agreed_terms = true;
+                    
+                    metadata.agreed_terms = document.querySelector("#checkboxTerms").checked;
                     metadata.first_name = firstName.value;
+                    metadata.last_name = lastName.value;
                     metadata.display_name = displayName.value;
+                    metadata.birthday = birthday.value;
+
                     setUserMetadata(metadata, function (err) {
                         if (err) {
                             return showError(err);
@@ -768,6 +772,7 @@
     //called in the html
     FNNAuth.initialize = staticInitialize;
     FNNAuth.handleCallback = handleCallback;
+    FNNAuth.showError = showError
 
     //making it global 
     root.FNNAuth = FNNAuth;

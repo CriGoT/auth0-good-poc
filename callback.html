@@ -40,7 +40,8 @@
         script([
             "https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js",
             "options.js",
-            "fnnauth.js"
+            "fnnauth.js",
+            "callback.js"
         ], function() {
             window.FNNAuth.handleCallback();
         });
@@ -48,32 +49,78 @@
     </script>
 </head>
 
-<body class="hide">
+<body class="hide signup">
     <div class="signup-container">
         <div class="col-xs-12 col-sm-4 col-sm-offset-4 signup-box">
             <form class="new-user">
+                <div class="signup-header">
+                    <!-- TO DO: switch logo to svg -->
+                    <img src="images/fn-logo-512x512-v2017-1.svg">
+                    <h3>FOX NEWS</h3>
+                    <h5>just a few more steps..</h5>
+                </div>
+                <div id="error-message" class="alert alert-danger"></div>
                 <fieldset>
-                    <div class="signup-header">
-                        <!-- TO DO: switch logo to svg -->
-                        <img src="images/fn-logo-512x512-v2017-1.svg">
-                        <h3>FOX NEWS</h3>
-                        <h5>just a few more steps..</h5>
-                    </div>
-                    <div id="error-message" class="alert alert-danger"></div>
-                    <div>
-                        <input type="text" id="first_name" class="form-control" placeholder="First name">
-                        <input type="text" id="last_name" class="form-control" placeholder="Last name">
+                      <div class="form-group">
                         <input type="text" id="display_name" class="form-control" placeholder="Display name">
-                        <div class="form-group">
-                            <div class="form-tip">Enter your birthday</div>
-                            <input type="date" id="birthday" placeholder="birthday">
-                        </div>
-                        <label>
-                            <input type="checkbox" class="form-control" id="checkboxTerms" name="termsCheckbox" />
-                            <p>I have read and agree to Fox News Digital's <a target="_blank" href="http://www.foxnews.com/story/0,2933,95454,00.html">Terms of Service</a> and <a target="_blank" href="http://www.foxnews.com/story/0,2933,95452,00.html">Privacy Policy</a></p>
+                      </div>
+                      <input type="hidden" name="birthday" id="birthday">
+                      <div class="form-group">
+                        <label for="id" class="col-md-2 control-label">Enter your birthday</label>
+                        <div class="input-group">
+                          <span class="input-group-btn">
+                            <select name="birthday-month" class="form-control" >
+                             <option value="">Month</option>
+                             <option value="1">Jan</option>
+                             <option value="2">Feb</option>
+                             <option value="3">Mar</option>
+                             <option value="4">Apr</option>
+                             <option value="5">May</option>
+                             <option value="6">Jun</option>
+                             <option value="7">Jul</option>
+                             <option value="8">Aug</option>
+                             <option value="9">Sep</option>
+                             <option value="10">Oct</option>
+                             <option value="11">Nov</option>
+                             <option value="12">Dec</option>
+                            </select>
+                          </span>
+                          <span class="input-group-btn">
+                            <select name="birthday-day" class="form-control" >
+                             <option value="">Day</option>
+                            </select>
+                          </span>
+                          <span class="input-group-btn">
+                            <select name="birthday-year" class="form-control" >
+                             <option value="">Year</option>
+                            </select>
+                          </span>
+                        </div>  
+                      </div>  
+
+
+                      <div class="form-check">
+                        <label class="form-check-label">
+                          <input type="checkbox" class="form-check-input" id="checkboxTerms" name="termsCheckbox" />
+                          I have read and agree to Fox News Digital's <a target="_blank" href="http://www.foxnews.com/story/0,2933,95454,00.html">Terms of Service</a> and <a target="_blank" href="http://www.foxnews.com/story/0,2933,95452,00.html">Privacy Policy</a>
                         </label>
+                      </div>
+                      <div class="form-group">
+                      <button class="btn btn-primary">Save</button>
+                      <button class="btn btn-primary btn-next">Continue to optional fields whatever</button>
                     </div>
-                    <button type="submit">Proceed</button>
+                </fieldset>
+                <fieldset>
+                      <div class="form-group">
+                          <input type="text" id="first_name" class="form-control" placeholder="First name">
+                      </div>
+                      <div class="form-group">
+                        <input type="text" id="last_name" class="form-control" placeholder="Last name">
+                      </div>
+                      <div class="form-group">
+                        <button class="btn btn-primary btn-prev">Previous</button>
+                        <button class="btn btn-primary btn-next">Next</button>
+                      </div>
                 </fieldset>
             </form>
         </div>
