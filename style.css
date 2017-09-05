@@ -81,7 +81,8 @@ label {
     color: #002e56;
     text-transform: uppercase;
     font-size: 10px;
-    width: 24.33%;
+    /*width: 24.33%;*/
+    width: 29.33%;
     float: left;
     position: relative;
     text-align: center;
