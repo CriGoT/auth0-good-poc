@@ -1,57 +1,83 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <link rel="stylesheet" href="style.css">
-  <script type="text/javascript">
-    if (window.parent!==window.self) {
-      try {
-        origin = (window.parent && window.parent.location.href) || window.location.origin;
-      } catch(e) {
-        origin = window.location.origin;
-      }
-      parent.postMessage(window.location.hash, origin);
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.auth0.com/js/auth0/8.7/auth0.min.js"></script>
+    <script src="https://cdn.auth0.com/js/polyfills/1.0/object-assign.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+    if (window.parent !== window.self) {
+        try {
+            origin = (window.parent && window.parent.location.href) || window.location.origin;
+        } catch (e) {
+            origin = window.location.origin;
+        }
+        parent.postMessage(window.location.hash, origin);
     } else {
-      function script(url, cb) {
-        if (Array.isArray(url)) {
-          var complete = 0;
-          url.forEach(function (cUrl) {
-            script(cUrl, function () {
-              if (++complete === url.length) {
-                cb()
-              }
-            })
-          })
-          return
+        function script(url, cb) {
+            if (Array.isArray(url)) {
+                var complete = 0;
+                url.forEach(function(cUrl) {
+                    script(cUrl, function() {
+                        if (++complete === url.length) {
+                            cb()
+                        }
+                    })
+                })
+                return
+            }
+
+            var scriptEl = document.createElement("script");
+            scriptEl.src = url;
+            scriptEl.onload = cb;
+            document.head.appendChild(scriptEl);
+            return scriptEl;
         }
 
-        var scriptEl = document.createElement("script");
-        scriptEl.src = url;
-        scriptEl.onload = cb;
-        document.head.appendChild(scriptEl);
-        return scriptEl;
-      }
-
-      script([
-        "https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js",
-        "options.js",
-        "fnnauth.js"
-      ], function () {
-        window.FNNAuth.handleCallback();
-      });
+        script([
+            "https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js",
+            "options.js",
+            "fnnauth.js"
+        ], function() {
+            window.FNNAuth.handleCallback();
+        });
     }
-  </script>
+    </script>
 </head>
+
 <body class="hide">
-  <form class="new-user">
-     <div>
-        <input type="text" id="first_name" placeholder="First name">
-        <input type="text" id="display_name" placeholder="Display name">
-        <label>
-          <input type="checkbox" class="form-control" id="checkboxTerms" name="termsCheckbox" />
-          I agree!!!!
-      </label>
-      </div>
-      <button type="submit">Proceed</button>
-  </form>
+    <div class="signup-container">
+        <div class="col-xs-12 col-sm-4 col-sm-offset-4 signup-box">
+            <form class="new-user">
+                <fieldset>
+                    <div class="signup-header">
+                        <!-- TO DO: switch logo to svg -->
+                        <img src="images/fn-logo-512x512-v2017-1.svg">
+                        <h3>FOX NEWS</h3>
+                        <h5>just a few more steps..</h5>
+                    </div>
+                    <div id="error-message" class="alert alert-danger"></div>
+                    <div>
+                        <input type="text" id="first_name" class="form-control" placeholder="First name">
+                        <input type="text" id="last_name" class="form-control" placeholder="Last name">
+                        <input type="text" id="display_name" class="form-control" placeholder="Display name">
+                        <div class="form-group">
+                            <div class="form-tip">Enter your birthday</div>
+                            <input type="date" id="birthday" placeholder="birthday">
+                        </div>
+                        <label>
+                            <input type="checkbox" class="form-control" id="checkboxTerms" name="termsCheckbox" />
+                            <p>I have read and agree to Fox News Digital's <a target="_blank" href="http://www.foxnews.com/story/0,2933,95454,00.html">Terms of Service</a> and <a target="_blank" href="http://www.foxnews.com/story/0,2933,95452,00.html">Privacy Policy</a></p>
+                        </label>
+                    </div>
+                    <button type="submit">Proceed</button>
+                </fieldset>
+            </form>
+        </div>
+    </div>
 </body>
+
 </html>

@@ -197,7 +197,7 @@
                     err.message = err.description
                     swal({ type: "error", title: "Whoops!", text: err.message})
                   } else {
-                    swal({ type: "success", title: "Sorry to see you go!", text: "Byeee"}).then(function () {
+                    swal({ type: "success", title: "Sorry to see you go!", text: ""}).then(function () {
                         startLogout();
                     })
                   }
