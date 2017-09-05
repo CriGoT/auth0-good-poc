@@ -80,8 +80,8 @@
     if (nextFieldset && btnNext) {
       btnNext.onclick = function (e) {
         e.preventDefault();
-        var checkEl = fieldset.querySelector("#checkboxTerms")
-        var birthday = fieldset.querySelector("#birthday")
+        var checkEl = fieldset.querySelector("#checkboxTerms");
+        var birthday = fieldset.querySelector("#birthday");
         if (checkEl && !checkEl.checked) {
           return FNNAuth.showError("You have to agree!!!!");
         }  
@@ -90,7 +90,7 @@
           isNaN(new Date(birthday.value).getTime())
         );
         if (isInvalidBirthday) {
-          return FNNAuth.showError("Enter a valid birthday date!!!!");
+          return FNNAuth.showError("Enter a valid birthday date.");
         } 
         commonClick(e)
         show(nextFieldset);

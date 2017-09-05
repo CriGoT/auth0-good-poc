@@ -737,6 +737,7 @@
                 var lastName = document.getElementById("last_name")
                 var displayName = document.getElementById("display_name")
                 var birthday = document.getElementById("birthday")
+               
 
 
                 //display name in root that is used for prefilling field
@@ -752,7 +753,10 @@
                     metadata.last_name = lastName.value;
                     metadata.display_name = displayName.value;
                     metadata.birthday = birthday.value;
-
+                    metadata.fb_breaking_alerts = document.querySelector("#fb_breaking_alerts").checked;
+                    metadata.fn_breaking_alerts = document.querySelector("#fn_breaking_alerts").checked;
+                    metadata.fn_morn_headlines = document.querySelector("#fn_morn_headlines").checked;
+                    metadata.top_headline = document.querySelector("#top_headline").checked;
                     setUserMetadata(metadata, function (err) {
                         if (err) {
                             return showError(err);
