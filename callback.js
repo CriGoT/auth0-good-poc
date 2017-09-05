@@ -74,7 +74,7 @@
       btnPrev.onclick = function (e) {
         e.preventDefault();
 
-        $("#progressbar li").eq($("fieldset").index(prevFieldset)).removeClass("active");
+        $("#progressbar li").eq($("fieldset").index(fieldset)).removeClass("active");
 
         commonClick(e)
         show(prevFieldset);
@@ -84,7 +84,7 @@
       btnNext.onclick = function (e) {
         e.preventDefault();
         //add active class to progress bar
-        $("#progressbar li").eq($("fieldset").index(fieldset)).addClass("active");
+        $("#progressbar li").eq($("fieldset").index(nextFieldset)).addClass("active");
 
         var checkEl = fieldset.querySelector("#checkboxTerms");
         var birthday = fieldset.querySelector("#birthday");
