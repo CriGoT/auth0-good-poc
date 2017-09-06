@@ -9,9 +9,6 @@ function (user, context, callback) {
        
   // Twitter bigger image
   switch (context.connectionStrategy) {
-    case "twitter":
-      user.picture = user.picture.replace("_normal", "");
-      break;
     case "facebook":
       user.picture = user.picture_large;
       break;

@@ -3,13 +3,10 @@
 	"allowed_logout_urls": [],
 	"allowed_origins": [],
 	"app_type": "spa",
-	"callback_url_template": false,
 	"callbacks": [],
-	"client_id": "UoUQbzeGYNHGGzl6WgVwqD523w3YGPW2",
 	"cross_origin_auth": false,
 	"custom_login_page_on": true,
 	"description": "",
-	"global": false,
 	"grant_types": [
 		"implicit"
 	],
@@ -24,6 +21,5 @@
 	"oidc_conformant": true,
 	"sso": true,
 	"sso_disabled": false,
-	"tenant": "testing-foxnews",
 	"token_endpoint_auth_method": "none"
 }
