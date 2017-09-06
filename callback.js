@@ -83,8 +83,6 @@
     if (nextFieldset && btnNext) {
       btnNext.onclick = function (e) {
         e.preventDefault();
-        //add active class to progress bar
-        $("#progressbar li").eq($("fieldset").index(nextFieldset)).addClass("active");
 
         var checkEl = fieldset.querySelector("#checkboxTerms");
         var birthday = fieldset.querySelector("#birthday");
@@ -99,6 +97,10 @@
           return FNNAuth.showError("Enter a valid birthday date.");
         } 
         commonClick(e)
+        
+        //add active class to progress bar
+        $("#progressbar li").eq($("fieldset").index(nextFieldset)).addClass("active");
+
         show(nextFieldset);
       }
     }

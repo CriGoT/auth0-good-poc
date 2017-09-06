@@ -737,6 +737,7 @@
                 var lastName = document.getElementById("last_name")
                 var displayName = document.getElementById("display_name")
                 var birthday = document.getElementById("birthday")
+                var gender = document.getElementById("gender")
                
 
 
@@ -757,6 +758,7 @@
                     metadata.fn_breaking_alerts = document.querySelector("#fn_breaking_alerts").checked;
                     metadata.fn_morn_headlines = document.querySelector("#fn_morn_headlines").checked;
                     metadata.top_headline = document.querySelector("#top_headline").checked;
+                    metadata.gender = gender.value;
                     setUserMetadata(metadata, function (err) {
                         if (err) {
                             return showError(err);
