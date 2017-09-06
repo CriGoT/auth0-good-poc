@@ -1,0 +1,9 @@
+{
+  "identifier": "https://sso.foxnews.com/userinfo",
+  "scopes": [
+
+  ],
+  "signing_alg": "RS256",
+  "skip_consent_for_verifiable_first_party_clients": true,
+  "allow_offline_access": false
+}
