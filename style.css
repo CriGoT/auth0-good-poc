@@ -368,3 +368,49 @@ div#errors > .error {
     padding: 10px;
     margin: 13px 0;
 }
+
+/*
+Political timeline*/
+#politicalViewsSliderWrapper { padding: 12px 0 0 !important; }
+#politicalViews_container { width: 328px; }
+#politicalViewsSliderWrapper { display: inline; padding: 0; width: 450px; }
+#politicalViews_container { height: 35px; }
+#politicalViews_base.capture_slider_base { margin: 6px 0 10px; }
+#politicalViews_labels { font-size: 0; }
+#politicalViews_labels li { width: 92px; font-size: 12px; }
+#politicalViews_labels li:first-child { margin: 0 0 0 2px; }
+#politicalViewsSliderWrapper { position: relative; }
+.capture_slider_base {
+    display: block;
+    position: relative;
+    height: 5px;
+    margin: 15px 0 10px;
+    width: 100%;
+    border: 1px solid #ccc;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+.capture_slider_base .capture_slider_marker {
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+    border-radius: 7px;
+    background-color: #333;
+    position: absolute;
+    top: -5px;
+    width: 15px;
+    margin-left: -10px;
+    height: 16px;
+}
+.capture_slider_list ul {
+    text-align: left;
+    width: 480px;
+}
+.capture_slider_list ul li {
+    display: inline-block!important;
+    text-align: left;
+}
+.capture_slider_list ul li {
+    display: inline;
+    margin: 0;
+}
