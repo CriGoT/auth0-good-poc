@@ -1,0 +1,7 @@
+{
+	"enabled": false,
+	"id": "rul_VWwzFfpG6p2t09qE",
+	"name": "Add User metadata in Access Token",
+	"order": 4,
+	"stage": "login_success"
+}

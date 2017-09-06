@@ -1,0 +1,7 @@
+{
+	"enabled": false,
+	"id": "rul_sb09xFhkMB96U1CD",
+	"name": "Make Display Name unique",
+	"order": 6,
+	"stage": "login_success"
+}

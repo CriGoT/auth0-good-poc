@@ -1,0 +1,7 @@
+{
+	"enabled": true,
+	"id": "rul_b358Z7Pg5MRqlt1I",
+	"name": "Link Accounts with Same Email Address while Merging Metadata",
+	"order": 1,
+	"stage": "login_success"
+}

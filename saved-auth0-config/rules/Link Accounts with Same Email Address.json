@@ -1,0 +1,7 @@
+{
+	"enabled": false,
+	"id": "rul_307kxmzwBJAEkmiP",
+	"name": "Link Accounts with Same Email Address",
+	"order": 5,
+	"stage": "login_success"
+}

@@ -1,0 +1,7 @@
+{
+	"enabled": true,
+	"id": "rul_7wHvXfgUtITSPgMp",
+	"name": "Add metadata info to the user profile",
+	"order": 2,
+	"stage": "login_success"
+}

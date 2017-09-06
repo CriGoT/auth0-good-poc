@@ -1,0 +1,7 @@
+{
+	"enabled": true,
+	"id": "rul_AkHCT1mgahRoThcO",
+	"name": "User Profile",
+	"order": 3,
+	"stage": "login_success"
+}
