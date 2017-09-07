@@ -733,11 +733,12 @@
                     return redirectUser()
                 }
 
-                var firstName = document.getElementById("first_name")
-                var lastName = document.getElementById("last_name")
-                var displayName = document.getElementById("display_name")
-                var birthday = document.getElementById("birthday")
-                var gender = document.getElementById("gender")
+                var firstName = document.getElementById("first_name");
+                var lastName = document.getElementById("last_name");
+                var displayName = document.getElementById("display_name");
+                var birthday = document.getElementById("birthday");
+                var gender = document.getElementById("gender");
+                var party = document.getElementById("party");
                
 
 
@@ -759,6 +760,7 @@
                     metadata.fn_morn_headlines = document.querySelector("#fn_morn_headlines").checked;
                     metadata.top_headline = document.querySelector("#top_headline").checked;
                     metadata.gender = gender.value;
+                    metadata.party = party.value;
                     setUserMetadata(metadata, function (err) {
                         if (err) {
                             return showError(err);
