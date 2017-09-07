@@ -91,10 +91,10 @@
         var hasSymbols = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/
 
         var displayName = $("#display_name").val();
+
         if (hasSymbols.test(displayName)) {
             return FNNAuth.showError("Invalid display name. No spaces or symbols.");
         }
-
         var checkEl = fieldset.querySelector("#checkboxTerms");
         var birthday = fieldset.querySelector("#birthday");
         if (checkEl && !checkEl.checked) {
