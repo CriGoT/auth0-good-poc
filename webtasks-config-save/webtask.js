@@ -48,17 +48,13 @@ const updateUser = (req, res) => {
 
     // TODO: Newsletter API could also be updated at this point if needed
 
-    const hasWhiteSpace = function(s) {
-        return s.indexOf(' ') >= 0;
-    }
-
     const hasSymbols = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/
 
     Promise.resolve().then(() => {
 
         // Display name validation (no symbols or white space)
         const displayName = profile.user_metadata.display_name;
-        if (hasWhiteSpace(displayName) || hasSymbols.test(displayName)) {
+        if (hasSymbols.test(displayName)) {
             throw new Error("Invalid display name. No spaces or symbols.")
         }
         // Agreed terms

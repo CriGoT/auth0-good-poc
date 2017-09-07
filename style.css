@@ -371,7 +371,7 @@ div#errors > .error {
 
 /*
 Political timeline*/
-#politicalViewsSliderWrapper { padding: 12px 0 0 !important; }
+/*#politicalViewsSliderWrapper { padding: 12px 0 0 !important; }
 #politicalViews_container { width: 328px; }
 #politicalViewsSliderWrapper { display: inline; padding: 0; width: 450px; }
 #politicalViews_container { height: 35px; }
@@ -414,3 +414,4 @@ Political timeline*/
     display: inline;
     margin: 0;
 }
+*/
