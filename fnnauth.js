@@ -213,15 +213,15 @@
         // Handle change password
         document.getElementById("change-pass").addEventListener("click", changePassword);
         document.getElementById("delete-account").addEventListener("click", deleteAccount);
-        var backBtn = document.getElementById("back-button");
+        // var backBtn = document.getElementById("back-button");
         // Hide the back button if the previous page is not on the same domain
-        if (document.referrer.indexOf(location.hostname) === -1) {
-            backBtn.style.display = "none";
-        } else {
-            backBtn.addEventListener("click", function() {
-                history.go(-1);
-            })
-        }
+        // if (document.referrer.indexOf(location.hostname) === -1) {
+        //     backBtn.style.display = "none";
+        // } else {
+        //     backBtn.addEventListener("click", function() {
+        //         history.go(-1);
+        //     })
+        // }
     }
 
     const renderProfileFields = function(profile) {
