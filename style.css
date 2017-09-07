@@ -37,7 +37,7 @@ body.signup h5 {
 
 label {
     color: #002e56;
-    font-weight: 500;
+    font-weight: 500 !important;
 }
 
 .signup-container {

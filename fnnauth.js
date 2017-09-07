@@ -750,6 +750,7 @@
                     e.preventDefault()
                     swal.showLoading();
                     
+                    metadata.newsletters = {};
                     metadata.agreed_terms = document.querySelector("#checkboxTerms").checked;
                     metadata.first_name = firstName.value;
                     metadata.last_name = lastName.value;
