@@ -84,10 +84,21 @@
       btnNext.onclick = function (e) {
         e.preventDefault();
 
+        // var hasWhiteSpace = function(s) {
+        //   return s.indexOf(' ') >= 0;
+        // }
+
+        var hasSymbols = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/
+
+        var displayName = fieldset.querySelector("#display_name");
+        if (hasSymbols.test(displayName)) {
+            return FNNAuth.showError("Invalid display name. No spaces or symbols.");
+        }
+
         var checkEl = fieldset.querySelector("#checkboxTerms");
         var birthday = fieldset.querySelector("#birthday");
         if (checkEl && !checkEl.checked) {
-          return FNNAuth.showError("You have to agree!!!!");
+          return FNNAuth.showError("You have to agree to the terms...");
         }  
         var isInvalidBirthday = birthday && (
           !/^\d{4}-\d{2}-\d{2}$/.test(birthday.value) ||
