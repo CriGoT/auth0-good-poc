@@ -90,7 +90,7 @@
 
         var hasSymbols = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/
 
-        var displayName = fieldset.querySelector("#display_name");
+        var displayName = $("#display_name").val();
         if (hasSymbols.test(displayName)) {
             return FNNAuth.showError("Invalid display name. No spaces or symbols.");
         }
