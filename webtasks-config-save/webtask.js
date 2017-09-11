@@ -5,6 +5,8 @@ import express from 'express';
 import { json as jsonParser } from 'body-parser';
 import { middlewares } from 'auth0-extension-express-tools';
 import { createServer } from 'auth0-extension-express-tools';
+import request from 'tinyreq';
+import qs from "querystring";
 
 const pipeException = (err, res) => {
     res.status(err.statusCode || 400).json({
@@ -82,8 +84,100 @@ const updateUser = (req, res) => {
         if (users.length) {
             throw new Error("The display name is already used.")
         }
+    }).then(() => {
+        return req.auth0.users.get({ id: req.user.sub })
+    }).then(currentUser => {
+        req.currentUser = currentUser
         return req.auth0.users.update({ id: req.user.sub }, profile)
-    }).then(data => {
+    }).then(() => {
+        const email = req.currentUser.email
+
+        const oldMetadata = req.currentUser.user_metadata
+        const metadata = profile.user_metadata
+
+        // TODO Use metadata.newsletters
+        const newsletters = metadata || {}; //metadata.newsletters || {}
+        const oldNewsletters = oldMetadata || {}; // moldMetadata.newsletters
+
+        const possibleNewsletters = {
+            "fb_breaking_alerts": {
+                slid: "5C84B893BD6D939E84FAE1A8E6E9525A",
+                group: "foxbusiness",
+                list_id: "32"
+            },
+            "fn_breaking_alerts": {
+                slid: "C2F278094FACCEA62391025B7A52D8EB",
+                group: "foxnews",
+                list_id: "35"
+            },
+            "fn_morn_headlines": {
+                slid: "3DC725E303A24F8DCF015F07C61BABFD",
+                group: "foxnewsletter",
+                list_id: "144"
+            },
+            "top_headline": {
+                slid: "3DC725E303A24F8DB05092D232355E43",
+                group: "foxnewsletter",
+                list_id: "71"
+            }
+        }
+
+        const slids = {
+            subscribe: [],
+            unsubscribe: []
+        }
+
+        Object.keys(possibleNewsletters).forEach(newsletterName => {
+            const slid = possibleNewsletters[newsletterName]
+
+            const subscribedBefore = oldNewsletters[newsletterName]
+            const subscribedNow = newsletters[newsletterName]
+
+            const isUnsubscribing = subscribedBefore && !subscribedNow
+            const isSubscribing = !subscribedBefore && subscribedNow
+
+            // unsubscribe
+            if (isUnsubscribing) {
+                slids.unsubscribe.push(slid)
+                // subscribe
+            } else if (isSubscribing) {
+                slids.subscribe.push(slid)
+            }
+        })
+
+        const promises = []
+
+        if (slids.subscribe.length) {
+            promises.push(request({
+                url: "http://www.foxnews.com/portal/newsalertsubscribe",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                data: {
+                    email,
+                    slids: slids.subscribe.map(c => c.slid).join(",")
+                }
+            }).then(res => {
+                console.log(res)
+            }))
+        }
+        //since unsubscribe accepts one slid at a time, we need to request individually
+        if (slids.unsubscribe.length) {
+            const queries = slids.unsubscribe.map(c => ({
+                c: "unsub",
+                email,
+                list_id: c.list_id,
+                r: c.group
+            }));
+            promises.push(Promise.all(queries.map(query => request(
+                `http://www.foxnews.com/feeds/app/newsletters/?${qs.stringify(query)}`
+            ).then(res => {
+                console.log(res);
+            }))));
+        }
+
+        return Promise.all(promises);
+    }).then(() => {
         // The raw profile will not match the one used by the application
         // either map (duplicate of rule) or let the client ask for a refreshed profile
         res.status(204).end();

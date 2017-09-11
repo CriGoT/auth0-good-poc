@@ -388,8 +388,7 @@
 
         // We make the true/false string in to a boolean
         // TODO: This is a hack
-        //       If there are humans with weird names as "false" or "true",
-        //       or a party called "false", this will probably fail.
+        //       If there are humans with weird names like "false" or "true", this will probably fail.
         Object.keys(metadata).forEach(function(key) {
             if (["true", "false"].includes(metadata[key])) {
                 metadata[key] = metadata[key] === "true";
