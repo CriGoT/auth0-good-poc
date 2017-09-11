@@ -189,7 +189,7 @@
               getUserProfile(function (err, profile) {
                 if (err) {
                   err.message = err.message || err.description
-                  return swal({ type: "error", title: "Whoops!", text: err.message})
+                  return swal({ type: "error", title: "Oops!", text: err.message})
                 }
 
                 deleteUserProfileApi(function (err) {
