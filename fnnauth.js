@@ -365,25 +365,26 @@
             return;
         }
 
-        var schema = getProfileSchema(profile);
-        Object.keys(metadata).forEach(function (key) {
-            if (!schema.properties[key]) {
-                schema.properties[key] = {
-                    hidden: true
-                };
-            }
-        })
+        // var schema = getProfileSchema(profile);
+        // Object.keys(metadata).forEach(function (key) {
+        //     if (!schema.properties[key]) {
+        //         schema.properties[key] = {
+        //             hidden: true
+        //         };
+        //     }
+        // })
     
         // Set up the jsoneditor
         // https://github.com/jdorn/json-editor
-        var profileEditor = new JSONEditor(document.getElementById('profile-editor'), {
-            disable_edit_json: true,
-            disable_collapse: true,
-            disable_properties: true,
-            theme: 'barebones',
-            // show_errors: "always",
-            schema: schema
-        });
+        // var profileEditor = new JSONEditor(document.getElementById('profile-editor'), {
+        //     disable_edit_json: true,
+        //     disable_collapse: true,
+        //     disable_properties: true,
+        //     theme: 'barebones',
+        //     // show_errors: "always",
+        //     schema: schema
+        // });
+
 
 
         // We make the true/false string in to a boolean
@@ -396,28 +397,37 @@
         })
 
 
-        // Set the default fields
-        Object.keys(profileEditor.schema.properties).forEach(function(cProp) {
-            var sch = profileEditor.schema.properties[cProp];
-            var def = sch.default
-            if (sch.hidden) {
-                document.querySelector("[data-schemapath=\"root." + cProp + "\"]").style.display = "none"
-            }
-            if (def !== undefined && metadata[cProp] === undefined) {
-                metadata[cProp] = def;
-            }
-        })
+        var profileEditor = document.getElementById('profile-editor');
+        console.log(profile);
 
-        //style the user form 
-        const lineUserProfile = `<div class='hr'></div>`;
-        const stylingNewsletterUserProfile = `<div><h3>Newsletter Subscriptions</h3>${lineUserProfile}</div>`;
-
-        //TODO: make this append once only
-        $('h3 span').append(lineUserProfile);
-        $('div[data-schemapath="root.party"]').append(stylingNewsletterUserProfile);
+        profileEditor.querySelector("[data-schemapath='root.email'] > div > input").value = profile.email;
+        profileEditor.querySelector("[data-schemapath='root.first_name'] > div > input").value = profile["https://example.com/metadata"].first_name;
+        profileEditor.querySelector("[data-schemapath='root.last_name'] > div > input").value = profile["https://example.com/metadata"].last_name;
+        profileEditor.querySelector("[data-schemapath='root.display_name'] > div > input").value = profile["https://example.com/metadata"].display_name;
 
 
-        profileEditor.setValue(metadata);
+        // // Set the default fields
+        // Object.keys(profileEditor.schema.properties).forEach(function(cProp) {
+        //     var sch = profileEditor.schema.properties[cProp];
+        //     var def = sch.default
+        //     if (sch.hidden) {
+        //         document.querySelector("[data-schemapath=\"root." + cProp + "\"]").style.display = "none"
+        //     }
+        //     if (def !== undefined && metadata[cProp] === undefined) {
+        //         metadata[cProp] = def;
+        //     }
+        // })
+
+        // //style the user form 
+        // const lineUserProfile = `<div class='hr'></div>`;
+        // const stylingNewsletterUserProfile = `<div><h3>Newsletter Subscriptions</h3>${lineUserProfile}</div>`;
+
+        // //TODO: make this append once only
+        // $('h3 span').append(lineUserProfile);
+        // $('div[data-schemapath="root.party"]').append(stylingNewsletterUserProfile);
+
+
+        // profileEditor.setValue(metadata);
 
         // Save the metadata, when we click on the save button
         document.querySelector("#save-profile").addEventListener("click", function() {

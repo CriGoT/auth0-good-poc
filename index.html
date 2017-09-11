@@ -19,13 +19,141 @@
                     <div id="display-name">
                         <span data-user-field="nickname"></span>
                     </div>
-
                     <a id="change-pass">Change Password</a>
-                     <a id="delete-account">Delete Account</a>
-                   <!--  <div id="back-button" class="btn"><span></span>Back</div> -->
+                    <a id="delete-account">Delete Account</a>
+                    <!--  <div id="back-button" class="btn"><span></span>Back</div> -->
                 </div>
             </div>
-            <div id="profile-editor"></div>
+            <div id="profile-editor">
+                <div>
+                    <h3>Profile</h3>
+                    <div class="hr"></div>
+                </div>
+                <div class="row">
+                    <div data-schematype="string" data-schemapath="root.display_name">
+                        <div class="form-control">
+                            <label>Display Name</label>
+                            <input type="text" name="root[display_name]">
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-schematype="string" data-schemapath="root.first_name">
+                        <div class="form-control">
+                            <label>First Name</label>
+                            <input type="text" name="root[first_name]">
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-schematype="string" data-schemapath="root.last_name">
+                        <div class="form-control">
+                            <label>Last Name</label>
+                            <input type="text" name="root[last_name]">
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-schematype="string" data-schemapath="root.email">
+                        <div class="form-control">
+                            <label>Email</label>
+                            <input type="text" disabled="" name="root[email]">
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-schematype="string" data-schemapath="root.birthday">
+                        <div class="form-control">
+                            <label>Birthday</label>
+                            <input type="text" pattern="/^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/" name="root[birthday]">
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-schematype="string" data-schemapath="root.zip_code">
+                        <div class="form-control">
+                            <label>Zip Code</label>
+                            <input type="text" name="root[zip_code]">
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-schematype="string" data-schemapath="root.gender">
+                        <div class="form-control">
+                            <label>Gender</label>
+                            <select name="root[gender]">
+                                <option value="undefined"> </option>
+                                <option value="Not Specified">Not Specified</option>
+                                <option value="male">male</option>
+                                <option value="female">female</option>
+                            </select>
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-schematype="string" data-schemapath="root.party">
+                        <div class="form-control">
+                            <label>Political Views</label>
+                            <select name="root[party]">
+                                <option value="undefined"> </option>
+                                <option value="liberal">liberal</option>
+                                <option value="democrat">democrat</option>
+                                <option value="independent">independent</option>
+                                <option value="republican">republican</option>
+                                <option value="conservative">conservative</option>
+                            </select>
+                        </div>
+                        <div></div>
+                        <div>
+                            <h3>Newsletter Subscriptions</h3>
+                            <div class="hr"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-schematype="boolean" data-schemapath="root.fb_breaking_alerts">
+                        <div class="form-control">
+                            <label style="font-weight: normal;">
+                                <input type="checkbox" name="root[fb_breaking_alerts]" style="display: inline-block; width: auto;">Subscribe to FB Breaking Alerts</label>
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-schematype="boolean" data-schemapath="root.fn_breaking_alerts">
+                        <div class="form-control">
+                            <label style="font-weight: normal;">
+                                <input type="checkbox" name="root[fn_breaking_alerts]" style="display: inline-block; width: auto;">Subscribe to FN Breaking Alerts</label>
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-schematype="boolean" data-schemapath="root.fn_morn_headlines">
+                        <div class="form-control">
+                            <label style="font-weight: normal;">
+                                <input type="checkbox" name="root[fn_morn_headlines]" style="display: inline-block; width: auto;">Subscribe to FN Morning Headlines</label>
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-schematype="boolean" data-schemapath="root.top_headline">
+                        <div class="form-control">
+                            <label style="font-weight: normal;">
+                                <input type="checkbox" name="root[top_headline]" style="display: inline-block; width: auto;">Subscribe to Top Morning Headlines</label>
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
             <div id="errors"></div>
             <button id='save-profile' class="btn">Update Settings</button>
             <!--        <div class="newsletter-container">
