@@ -19,20 +19,285 @@
                     <div id="display-name">
                         <span data-user-field="nickname"></span>
                     </div>
-
                     <a id="change-pass">Change Password</a>
-                     <a id="delete-account">Delete Account</a>
-                   <!--  <div id="back-button" class="btn"><span></span>Back</div> -->
+                    <a id="delete-account">Delete Account</a>
+                    <!--  <div id="back-button" class="btn"><span></span>Back</div> -->
                 </div>
             </div>
-            <div id="profile-editor"></div>
+            <div id="profile-editor">
+                <div>
+                    <h3>Profile</h3>
+                    <div class="hr"></div>
+                </div>
+                <div class="row">
+                    <div data-schematype="string" data-schemapath="root.display_name">
+                        <div class="form-control">
+                            <label>Display Name</label>
+                            <input type="text" name="root[display_name]">
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-schematype="string" data-schemapath="root.first_name">
+                        <div class="form-control">
+                            <label>First Name</label>
+                            <input type="text" name="root[first_name]">
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-schematype="string" data-schemapath="root.last_name">
+                        <div class="form-control">
+                            <label>Last Name</label>
+                            <input type="text" name="root[last_name]">
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-schematype="string" data-schemapath="root.email">
+                        <div class="form-control">
+                            <label>Email</label>
+                            <input type="text" disabled="" name="root[email]">
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="row hide">
+                    <div data-schematype="string" data-schemapath="root.birthday">
+                        <div class="form-control">
+                            <input type="hidden" name="birthday">
+                        </div>
+                    </div>
+                </div>
+              <div class="form-group">
+                        <label for="id" class="control-label">Enter your birth date</label>
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                            <select name="birthday-month" class="form-control" >
+                             <option value="">Month</option>
+                             <option value="1">Jan</option>
+                             <option value="2">Feb</option>
+                             <option value="3">Mar</option>
+                             <option value="4">Apr</option>
+                             <option value="5">May</option>
+                             <option value="6">Jun</option>
+                             <option value="7">Jul</option>
+                             <option value="8">Aug</option>
+                             <option value="9">Sep</option>
+                             <option value="10">Oct</option>
+                             <option value="11">Nov</option>
+                             <option value="12">Dec</option>
+                            </select>
+                          </span>
+                            <span class="input-group-btn">
+                            <select name="birthday-day" class="form-control" >
+                             <option value="">Day</option>
+                            </select>
+                          </span>
+                            <span class="input-group-btn">
+                            <select name="birthday-year" class="form-control" >
+                             <option value="">Year</option>
+                            </select>
+                          </span>
+                        </div>
+                    </div>
+                <div class="row">
+                    <div data-schematype="string" data-schemapath="root.zip_code">
+                        <div class="form-control">
+                            <label>Zip Code</label>
+                            <input type="text" name="root[zip_code]">
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-schematype="string" data-schemapath="root.gender">
+                        <div class="form-control">
+                            <label>Gender</label>
+                            <select name="root[gender]">
+                                <option value=""></option>
+                                <option value="Not Specified">Not Specified</option>
+                                <option value="male">male</option>
+                                <option value="female">female</option>
+                            </select>
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-schematype="string" data-schemapath="root.party">
+                        <div class="form-control">
+                            <label>Political Views</label>
+                            <select name="root[party]">
+                                <option value=""> </option>
+                                <option value="liberal">liberal</option>
+                                <option value="democrat">democrat</option>
+                                <option value="independent">independent</option>
+                                <option value="republican">republican</option>
+                                <option value="conservative">conservative</option>
+                            </select>
+                        </div>
+                        <div></div>
+                        <div>
+                            <h3>Newsletter Subscriptions</h3>
+                            <div class="hr"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-schematype="boolean" data-schemapath="root.fb_breaking_alerts">
+                        <div class="form-control">
+                            <label style="font-weight: normal;">
+                                <input type="checkbox" name="root[fb_breaking_alerts]" style="display: inline-block; width: auto;">Subscribe to FB Breaking Alerts</label>
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-schematype="boolean" data-schemapath="root.fn_breaking_alerts">
+                        <div class="form-control">
+                            <label style="font-weight: normal;">
+                                <input type="checkbox" name="root[fn_breaking_alerts]" style="display: inline-block; width: auto;">Subscribe to FN Breaking Alerts</label>
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-schematype="boolean" data-schemapath="root.fn_morn_headlines">
+                        <div class="form-control">
+                            <label style="font-weight: normal;">
+                                <input type="checkbox" name="root[fn_morn_headlines]" style="display: inline-block; width: auto;">Subscribe to FN Morning Headlines</label>
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-schematype="boolean" data-schemapath="root.top_headline">
+                        <div class="form-control">
+                            <label style="font-weight: normal;">
+                                <input type="checkbox" name="root[top_headline]" style="display: inline-block; width: auto;">Subscribe to Top Morning Headlines
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                  <div data-schema-type="boolean" data-schemapath="root.aaa">
+                    <div class="form-control">
+                      <label style="font-style:normal">
+                        <input type="checkbox" name="" id="foxnewsletterIDList_71" value="">Fox News Top Headlines</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div data-schema-type="boolean" data-schemapath="root.aaa">
+                    <div class="form-control">
+                      <label style="font-style:normal">
+                        <input type="checkbox" name="" id="foxnewsIDList_35" value="">Fox News Breaking News Alerts</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div data-schema-type="boolean" data-schemapath="root.aaa">
+                    <div class="form-control">
+                      <label style="font-style:normal">
+                        <input type="checkbox" name="" id="foxnewsletterIDList_96" value="">Best of Opinion</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div data-schema-type="boolean" data-schemapath="root.aaa">
+                    <div class="form-control">
+                      <label style="font-style:normal">
+                        <input type="checkbox" name="" id="foxbusinessIDList_32" value="">Fox Business Breaking News Alerts</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div data-schema-type="boolean" data-schemapath="root.aaa">
+                    <div class="form-control">
+                      <label style="font-style:normal">
+                        <input type="checkbox" name="" id="foxnewsletterIDList_106" value="">Fox 411</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div data-schema-type="boolean" data-schemapath="root.aaa">
+                    <div class="form-control">
+                      <label style="font-style:normal">
+                        <input type="checkbox" name="" id="foxnewsletterIDList_153" value="">SciTech Geek Sheet</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div data-schema-type="boolean" data-schemapath="root.aaa">
+                    <div class="form-control">
+                      <label style="font-style:normal">
+                        <input type="checkbox" name="" id="foxnewsletterIDList_151" value="">Fox Business Morning Headlines</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div data-schema-type="boolean" data-schemapath="root.aaa">
+                    <div class="form-control">
+                      <label style="font-style:normal">
+                        <input type="checkbox" name="" id="foxnewsletterIDList_160" value="">Health Weekly Dose</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div data-schema-type="boolean" data-schemapath="root.aaa">
+                    <div class="form-control">
+                      <label style="font-style:normal">
+                        <input type="checkbox" name="" id="foxnewsletterIDList_69" value="">Fox Business Most Popular</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div data-schema-type="boolean" data-schemapath="root.aaa">
+                    <div class="form-control">
+                      <label style="font-style:normal">
+                        <input type="checkbox" name="" id="foxnewsletterIDList_144" value="">Fox News Morning Headlines</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div data-schema-type="boolean" data-schemapath="root.aaa">
+                    <div class="form-control">
+                      <label style="font-style:normal">
+                        <input type="checkbox" name="" id="foxpromosIDList_43" value="">Fox Fan Scoop</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div data-schema-type="boolean" data-schemapath="root.aaa">
+                    <div class="form-control">
+                      <label style="font-style:normal">
+                        <input type="checkbox" name="" id="foxnewsletterIDList_99" value="">Fox Nation Fired Up</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div data-schema-type="boolean" data-schemapath="root.aaa">
+                    <div class="form-control">
+                      <label style="font-style:normal">
+                        <input type="checkbox" name="" id="foxnewsletterIDList_261" value="">Halftime Report</label>
+                    </div>
+                  </div>
+                </div>
+
+               
+
+            </div>
             <div id="errors"></div>
             <button id='save-profile' class="btn">Update Settings</button>
             <!--        <div class="newsletter-container">
             <h3>Newsletter Subscriptions</h3>
             <div class="hr"></div>
             <div class="news-sub-form">
-                <label for="top-headline"><input type="checkbox" name="" id="foxnewsletterIDList_71" value="">Fox News Top Headlines</label>
+            <div class="row"><div data-schema-type="boolean" data-schemapath="root.aaa"><div class="form-control"><label style="font-style:normal"><input type="checkbox" name="" id="foxnewsletterIDList_71" value="">Fox News Top Headlines</label></div></div>
                 <label for="fn-breaking-alerts"><input type="checkbox" name="" id="foxnewsIDList_35" value="" checked="checked">Fox News Breaking News Alerts</label>
                 <label for="bo-opinion"><input type="checkbox" name="" id="foxnewsletterIDList_96" value="">Best of Opinion</label>
                 <label for="fb-breaking-alerts"><input type="checkbox" name="" id="foxbusinessIDList_32" value="">Fox Business Breaking News Alerts</label>
