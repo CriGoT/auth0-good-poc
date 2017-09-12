@@ -2,7 +2,6 @@
 
 <head>
     <title>Profile Page</title>
-    <link rel="stylesheet" href="">
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -65,6 +64,8 @@
                         <div></div>
                     </div>
                 </div>
+              
+              
                 <div class="row hide">
                     <div data-schematype="string" data-schemapath="root.birthday">
                         <div class="form-control">
@@ -72,11 +73,11 @@
                         </div>
                     </div>
                   </div>
-              <div class="form-group">
+                  <div class="form-group" data-schematype="string">
                         <label for="id" class="control-label">Enter your birth date</label>
                         <div class="input-group">
                             <span class="input-group-btn">
-                            <select name="birthday-month" class="form-control" >
+                            <select name="birthday-month" class="form-control birthday-month" >
                              <option value="">Month</option>
                              <option value="1">Jan</option>
                              <option value="2">Feb</option>
@@ -93,12 +94,12 @@
                             </select>
                           </span>
                             <span class="input-group-btn">
-                            <select name="birthday-day" class="form-control" >
+                            <select name="birthday-day" class="form-control birthday-day" >
                              <option value="">Day</option>
                             </select>
                           </span>
                             <span class="input-group-btn">
-                            <select name="birthday-year" class="form-control" >
+                            <select name="birthday-year" class="form-control birthday-year" >
                              <option value="">Year</option>
                             </select>
                           </span>
