@@ -319,6 +319,13 @@
             return;
         }
 
+        //check if user verified email before showing profile
+        // if (!profile.email_verified) {          
+        //     document.body.classList.add("hide")
+        //     alert("please verify your email");
+        //     return;
+        // }
+
 
         // We make the true/false string in to a boolean
         // TODO: This is a hack
