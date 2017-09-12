@@ -80,7 +80,7 @@
         }
     }
 
-    
+
 
     var domain;
     var redirect;
@@ -306,7 +306,7 @@
         }
     }
 
-    
+
     const setupProfileEditor = function(profile) {
 
 
@@ -344,7 +344,7 @@
 
         profileEditor.querySelector("[data-schemapath='root.party'] > div > select").value = metadata.party;
         profileEditor.querySelector("[data-schemapath='root.gender'] > div > select").value = metadata.gender;
-        
+
         profileEditor.querySelector("[data-schemapath='root.fb_breaking_alerts'] input").checked = newsletters.fb_breaking_alerts
         profileEditor.querySelector("[data-schemapath='root.fn_breaking_alerts'] input").checked = newsletters.fn_breaking_alerts
         profileEditor.querySelector("[data-schemapath='root.fn_morn_headlines'] input").checked = newsletters.fn_morn_headlines
@@ -369,7 +369,20 @@
                 fb_breaking_alerts: profileEditor.querySelector("[data-schemapath='root.fb_breaking_alerts'] input").checked,
                 fn_breaking_alerts: profileEditor.querySelector("[data-schemapath='root.fn_breaking_alerts'] input").checked,
                 fn_morn_headlines: profileEditor.querySelector("[data-schemapath='root.fn_morn_headlines'] input").checked,
-                top_headline: profileEditor.querySelector("[data-schemapath='root.top_headline'] input").checked
+                top_headline: profileEditor.querySelector("[data-schemapath='root.top_headline'] input").checked,
+                fn_opinion_headlines: profileEditor.querySelector("[data-schemapath='root.fn_opinion_headlines'] input").checked,
+                fn_fox_411_newsletter: profileEditor.querySelector("[data-schemapath='root.fn_fox_411_newsletter'] input").checked,
+                fn_science_and_technology: profileEditor.querySelector("[data-schemapath='root.fn_science_and_technology'] input").checked,
+                fb_morning_headlines: profileEditor.querySelector("[data-schemapath='root.fb_morning_headlines'] input").checked,
+                fn_health_newsletter: profileEditor.querySelector("[data-schemapath='root.fn_health_newsletter'] input").checked,
+                fb_most_popular_content: profileEditor.querySelector("[data-schemapath='root.fb_most_popular_content'] input").checked,
+                fox_fan_scoop: profileEditor.querySelector("[data-schemapath='root.fox_fan_scoop'] input").checked,
+                fox_nation_fired_up: profileEditor.querySelector("[data-schemapath='root.fox_nation_fired_up'] input").checked,
+                halftime_report: profileEditor.querySelector("[data-schemapath='root.halftime_report'] input").checked
+
+
+
+
             }
 
 
@@ -676,9 +689,9 @@
                     storeTargetUrl();
                     root.location.href = redirect;
                 }
-                
+
                 if (err) { return redirectUser() }
-                
+
                 getUserProfile(function(err, profile) {
                     if (err) { return showError(err) }
                     var metadata = profile["https://example.com/metadata"];
@@ -713,6 +726,15 @@
                             fn_breaking_alerts: document.querySelector("#fn_breaking_alerts").checked,
                             fn_morn_headlines: document.querySelector("#fn_morn_headlines").checked,
                             top_headline: document.querySelector("#top_headline").checked
+                        //     fn_opinion_headlines: document.querySelector('#fn_opinion_headlines').checked,
+                        //     fn_fox_411_newsletter: document.querySelector('#fn_fox_411_newsletter').checked,
+                        //     fn_science_and_technology: document.querySelector('#fn_science_and_technology').checked,
+                        //     fb_morning_headlines: document.querySelector('#fb_morning_headlines').checked,
+                        //     fn_health_newsletter: document.querySelector('#fn_health_newsletter').checked,
+                        //     fb_most_popular_content: document.querySelector('#fb_most_popular_content').checked,
+                        //     fox_fan_scoop: document.querySelector('#fox_fan_scoop').checked,
+                        //     fox_nation_fired_up: document.querySelector('#fox_nation_fired_up').checked,
+                        //     halftime_report: document.querySelector('#halftime_report').checked
                         }
                         metadata.gender = gender.value;
                         metadata.party = party.value;
