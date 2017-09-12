@@ -404,6 +404,9 @@
         profileEditor.querySelector("[data-schemapath='root.first_name'] > div > input").value = profile["https://example.com/metadata"].first_name;
         profileEditor.querySelector("[data-schemapath='root.last_name'] > div > input").value = profile["https://example.com/metadata"].last_name;
         profileEditor.querySelector("[data-schemapath='root.display_name'] > div > input").value = profile["https://example.com/metadata"].display_name;
+        profileEditor.querySelector("[data-schemapath='root.party'] > div > select").value = profile["https://example.com/metadata"].party;
+        profileEditor.querySelector("[data-schemapath='root.gender'] > div > select").value = profile["https://example.com/metadata"].gender;
+        profileEditor.querySelector("[data-schemapath='root.zip_code'] > div > input").value = profile["https://example.com/metadata"].zip_code;
 
 
         // // Set the default fields
