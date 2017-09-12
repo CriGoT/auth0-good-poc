@@ -414,20 +414,7 @@
             }
             swal.showLoading()
 
-            // var value = profileEditor.getValue()
-
-            // Delete the disabled fields from the value
-            //deleting read only fields from the object sent to auth 0
-            // Object.keys(profileEditor.schema.properties).forEach(function(cProp) {
-            //     if (profileEditor.schema.properties[cProp].readOnly) {
-            //         delete value[cProp]
-            //     }
-            // })
-
-            //if (value....) {
-            // update newsletter preferences
-            // value.fn_subscribe...
-            //}
+     
             setUserMetadata(metadata, function(err) {
                 if (err) {
                     return showError(err);
@@ -775,27 +762,14 @@
 //TO DO: make UI using vue.js
 //Goal: silent login, browser compatible, newsletter integration, spot im integration, editing profile
 
-//QUESTION: How to delete user?
-//QUESTION: How to edit fields outside of user_metadata
+
 
 //QUESTION: request.open('GET', '/authn/' + domain + ".json", false); --need to publish domain configs
-//TO DO: how to add validators for user metadata --use webtasks
-//TO DO: Newsletter email validator
-//TO DO: prompt user to fill newsletter email field if empty
-//TO DO: can you add a date field to the sign up form
-//TO DO: make pop up embeddable
-//T0 DO: validate metadata currently using rule in js before sending back to auth 0
-//TO DO: fix appended formatting by clearing user profile div
-//TO DO: update metadata for social sign in profile
-//T0 DO: edit placeholder text for login.
-//TO DO: add conditional for social login to not be able to change password
-//TO DO: make username unique
-//TO DO: Make callback url permissions link dynamic
+
+
 //TO DO: linking users
-//TO DO: connect newsletter 
-//TO DO: add 'rules'
 //TO DO: connect with spot IM commenting
-//TO DO: have a file where we can save revision for login form
 //TO DO: way to easily migrate users
-//TO DO: clean up hosted login page on dashboard
 //TO DO: add official logo
+
+
