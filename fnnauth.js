@@ -9,7 +9,7 @@
     const document = root.document;
     const auth0jslocation = "https://cdn.auth0.com/js/auth0/8.9.2/auth0.min.js";
     const profileApiUrl = "https://testing-foxnews.us.webtask.io/userprofile";
- 
+
 
     if (root.FNNAuth) {
         return
@@ -21,7 +21,7 @@
     var webAuth;
     var options;
 
-    const showError = function (err) {
+    const showError = function(err) {
         swal({
             type: "error",
             title: "Uh Oh",
@@ -34,7 +34,7 @@
     }
 
     const callProfileApi = function(method, body, callback) {
-        if (callback==undefined) {
+        if (callback == undefined) {
             callback = body;
             body = undefined;
         }
@@ -49,23 +49,23 @@
             req.setRequestHeader('Authorization', 'Bearer ' + retrieveAccessToken());
             req.setRequestHeader('Content-type', 'application/json');
             req.onreadystatechange = function() {
-             if (req.readyState==4) {
-                if (req.status >= 400 ) {
-                    var err = req.responseText
-                    try {
-                        err = JSON.parse(err)
-                        err = err.message || err.error
-                    } catch (e) {}
+                if (req.readyState == 4) {
+                    if (req.status >= 400) {
+                        var err = req.responseText
+                        try {
+                            err = JSON.parse(err)
+                            err = err.message || err.error
+                        } catch (e) {}
 
-                    return callback(new Error(err))
+                        return callback(new Error(err))
+                    }
+                    callback(null, req.responseText && JSON.parse(req.responseText));
                 }
-                callback(null, req.responseText && JSON.parse(req.responseText));
-              }
             };
             try {
-              req.send(body && JSON.stringify(body));
-            } catch(e) {
-              callback(e);
+                req.send(body && JSON.stringify(body));
+            } catch (e) {
+                callback(e);
             }
         }));
     };
@@ -171,42 +171,42 @@
         callProfileApi("DELETE", callback);
     };
 
-    const deleteAccount = function () {
-      swal({
-        title: 'Delete Account',
-        text: "Are you sure you want to delete your account?",
-        type: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes!',
-        cancelButtonText: 'No, cancel!'
-      }).then(function () {
+    const deleteAccount = function() {
+        swal({
+            title: 'Delete Account',
+            text: "Are you sure you want to delete your account?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes!',
+            cancelButtonText: 'No, cancel!'
+        }).then(function() {
 
-        setTimeout(function () {
-            swal.showLoading();
-            getUserManagement(function (mgmt) {
-              getUserProfile(function (err, profile) {
-                if (err) {
-                  err.message = err.message || err.description
-                  return swal({ type: "error", title: "Oops!", text: err.message})
-                }
+            setTimeout(function() {
+                swal.showLoading();
+                getUserManagement(function(mgmt) {
+                    getUserProfile(function(err, profile) {
+                        if (err) {
+                            err.message = err.message || err.description
+                            return swal({ type: "error", title: "Oops!", text: err.message })
+                        }
 
-                deleteUserProfileApi(function (err) {
-                  if(err){
-                    err.message = err.description
-                    swal({ type: "error", title: "uh oh", text: err.message})
-                  } else {
-                    swal({ type: "success", title: "Sorry to see you go!", text: ""}).then(function () {
-                        startLogout();
-                    })
-                  }
+                        deleteUserProfileApi(function(err) {
+                            if (err) {
+                                err.message = err.description
+                                swal({ type: "error", title: "uh oh", text: err.message })
+                            } else {
+                                swal({ type: "success", title: "Sorry to see you go!", text: "" }).then(function() {
+                                    startLogout();
+                                })
+                            }
+                        });
+                    });
                 });
-              });
-            });
-        }, 1000)
-        
-      })
+            }, 1000)
+
+        })
     }
 
     const profileHandlers = function(profile) {
@@ -355,7 +355,7 @@
 
     const setupProfileEditor = function(profile) {
 
-        
+
 
         // Get the metadata
         const metadata = profile["https://example.com/metadata"] || {};
@@ -373,7 +373,7 @@
         //         };
         //     }
         // })
-    
+
         // Set up the jsoneditor
         // https://github.com/jdorn/json-editor
         // var profileEditor = new JSONEditor(document.getElementById('profile-editor'), {
@@ -435,7 +435,17 @@
         // Save the metadata, when we click on the save button
         document.querySelector("#save-profile").addEventListener("click", function() {
 
-            var errors = profileEditor.validate()
+            var profileEditor = document.getElementById('profile-editor');
+
+            metadata.first_name = profileEditor.querySelector("[data-schemapath='root.first_name'] > div > input").value
+            metadata.last_name = profileEditor.querySelector("[data-schemapath='root.last_name'] > div > input").value
+            metadata.display_name = profileEditor.querySelector("[data-schemapath='root.display_name'] > div > input").value
+            metadata.party = profileEditor.querySelector("[data-schemapath='root.party'] > div > select").value;
+            metadata.gender = profileEditor.querySelector("[data-schemapath='root.gender'] > div > select").value;
+            metadata.zip_code = profileEditor.querySelector("[data-schemapath='root.zip_code'] > div > input").value || "";
+
+
+            // var errors = profileEditor.validate()
             var errorsContainer = document.querySelector("#errors")
             errorsContainer.innerHTML = "";
             if (errors.length) {
@@ -456,21 +466,21 @@
             }
             swal.showLoading()
 
-            var value = profileEditor.getValue()
+            // var value = profileEditor.getValue()
 
             // Delete the disabled fields from the value
             //deleting read only fields from the object sent to auth 0
-            Object.keys(profileEditor.schema.properties).forEach(function(cProp) {
-                if (profileEditor.schema.properties[cProp].readOnly) {
-                    delete value[cProp]
-                }
-            })
+            // Object.keys(profileEditor.schema.properties).forEach(function(cProp) {
+            //     if (profileEditor.schema.properties[cProp].readOnly) {
+            //         delete value[cProp]
+            //     }
+            // })
 
             //if (value....) {
             // update newsletter preferences
             // value.fn_subscribe...
             //}
-            setUserMetadata(value, function(err) {
+            setUserMetadata(metadata, function(err) {
                 if (err) {
                     return showError(err);
                 }
@@ -495,13 +505,13 @@
     const createWebAuth = function() {
         webAuth = webAuth || new auth0.WebAuth(options.default);
         return webAuth;
-   }
+    }
 
     const loadAuth0js = function(callback) {
         if (!root.auth0) {
-            loadJs(auth0jslocation, function () {
+            loadJs(auth0jslocation, function() {
                 callback(createWebAuth());
-        });
+            });
         } else {
             callback(createWebAuth());
         }
@@ -524,17 +534,17 @@
     }
 
 
-// User/Password  
-//                    ------- Sign in/up ---> check if agreed terms (callback.html)
-// Google/Facebook                            |    |
-//                                            |    v
-//                                            YES  NO
-//                                            |     Show the after sign up page
-//                                            |     Agree
-//                                            |     |
-//                                            |     |
-//                                             \    v
-//                                              \-> Yaaay
+    // User/Password  
+    //                    ------- Sign in/up ---> check if agreed terms (callback.html)
+    // Google/Facebook                            |    |
+    //                                            |    v
+    //                                            YES  NO
+    //                                            |     Show the after sign up page
+    //                                            |     Agree
+    //                                            |     |
+    //                                            |     |
+    //                                             \    v
+    //                                              \-> Yaaay
 
 
     const auth0Logout = window.auth0logout = function(cb) {
@@ -544,10 +554,10 @@
             iframe.src = webAuth.client.buildLogoutUrl();
             iframe.onload = iframe.onerror = cb;
             document.body.appendChild(iframe);
-/*
-            setTimeout(function() {
-                document.body.removeChild(iframe);
-            }, 1500);*/
+            /*
+                        setTimeout(function() {
+                            document.body.removeChild(iframe);
+                        }, 1500);*/
         });
     }
 
@@ -575,7 +585,7 @@
 
             // Question: storing boolean values, without converting into strings?
             //           subscribed: false instead of "false"
-           webAuth.authorize(options.authorize);
+            webAuth.authorize(options.authorize);
         });
     }
 
@@ -633,12 +643,12 @@
         }));
     }
 
-    const setUserProfile = window.setUserProfile = function (profile, callback) {
+    const setUserProfile = window.setUserProfile = function(profile, callback) {
         callProfileApi("PATCH", profile, function(err, data) {
             if (err) return callback(err);
             // we get a new token to get the updated profile
             silentLogin(setResult(function() {
-                 getUserProfile(callback);
+                getUserProfile(callback);
             }, true));
         });
     }
@@ -661,7 +671,7 @@
             });
         }));*/
 
-        setUserProfile({user_metadata:profile}, callback)
+        setUserProfile({ user_metadata: profile }, callback)
     }
 
     const isAuthenticated = function() {
@@ -708,7 +718,7 @@
     // Class Constructor
     const FNNAuth = function(domainName, useRedirect) {
         domain = domainName || root.location.hostname;
-        redirect = useRedirect!==false ;
+        redirect = useRedirect !== false;
         options = getDomainOptions(domain);
     };
 
@@ -731,59 +741,59 @@
     const handleCallback = function(domain) {
         options = getDomainOptions(domain || root.location.hostname);
         getWebAuth(function(webAuth) {
-          webAuth.parseHash(setResult(function(err, authResult) {
-            if (err) { return showError(err) }
-            var redirectUser = function () {
-                const redirect = retrieveTargetUrl() || root.location.origin;
-                storeTargetUrl();
-                root.location.href = redirect;
-            }
-            getUserProfile(function(err, profile) {
+            webAuth.parseHash(setResult(function(err, authResult) {
                 if (err) { return showError(err) }
-                var metadata = profile["https://example.com/metadata"];
-                if (metadata.agreed_terms) {
-                    return redirectUser()
+                var redirectUser = function() {
+                    const redirect = retrieveTargetUrl() || root.location.origin;
+                    storeTargetUrl();
+                    root.location.href = redirect;
                 }
+                getUserProfile(function(err, profile) {
+                    if (err) { return showError(err) }
+                    var metadata = profile["https://example.com/metadata"];
+                    if (metadata.agreed_terms) {
+                        return redirectUser()
+                    }
 
-                var firstName = document.getElementById("first_name");
-                var lastName = document.getElementById("last_name");
-                var displayName = document.getElementById("display_name");
-                var birthday = document.getElementById("birthday");
-                var gender = document.getElementById("gender");
-                var party = document.getElementById("party");
-               
+                    var firstName = document.getElementById("first_name");
+                    var lastName = document.getElementById("last_name");
+                    var displayName = document.getElementById("display_name");
+                    var birthday = document.getElementById("birthday");
+                    var gender = document.getElementById("gender");
+                    var party = document.getElementById("party");
 
 
-                //display name in root that is used for prefilling field
-                displayName.value = profile["https://example.com/display_name"];
 
-                document.body.classList.remove("hide");
-                document.querySelector("form.new-user").addEventListener("submit", function (e) {
-                    e.preventDefault()
-                    swal.showLoading();
-                    
-                    metadata.newsletters = {};
-                    metadata.agreed_terms = document.querySelector("#checkboxTerms").checked;
-                    metadata.first_name = firstName.value;
-                    metadata.last_name = lastName.value;
-                    metadata.display_name = displayName.value;
-                    metadata.birthday = birthday.value;
-                    metadata.fb_breaking_alerts = document.querySelector("#fb_breaking_alerts").checked;
-                    metadata.fn_breaking_alerts = document.querySelector("#fn_breaking_alerts").checked;
-                    metadata.fn_morn_headlines = document.querySelector("#fn_morn_headlines").checked;
-                    metadata.top_headline = document.querySelector("#top_headline").checked;
-                    metadata.gender = gender.value;
-                    metadata.party = party.value;
-                    setUserMetadata(metadata, function (err) {
-                        if (err) {
-                            return showError(err);
-                        }
-                        redirectUser();    
+                    //display name in root that is used for prefilling field
+                    displayName.value = profile["https://example.com/display_name"];
+
+                    document.body.classList.remove("hide");
+                    document.querySelector("form.new-user").addEventListener("submit", function(e) {
+                        e.preventDefault()
+                        swal.showLoading();
+
+                        metadata.newsletters = {};
+                        metadata.agreed_terms = document.querySelector("#checkboxTerms").checked;
+                        metadata.first_name = firstName.value;
+                        metadata.last_name = lastName.value;
+                        metadata.display_name = displayName.value;
+                        metadata.birthday = birthday.value;
+                        metadata.fb_breaking_alerts = document.querySelector("#fb_breaking_alerts").checked;
+                        metadata.fn_breaking_alerts = document.querySelector("#fn_breaking_alerts").checked;
+                        metadata.fn_morn_headlines = document.querySelector("#fn_morn_headlines").checked;
+                        metadata.top_headline = document.querySelector("#top_headline").checked;
+                        metadata.gender = gender.value;
+                        metadata.party = party.value;
+                        setUserMetadata(metadata, function(err) {
+                            if (err) {
+                                return showError(err);
+                            }
+                            redirectUser();
+                        })
                     })
-                })
-            });
-            
-          }));
+                });
+
+            }));
         });
     }
 
