@@ -11,9 +11,76 @@
     const profileApiUrl = "https://testing-foxnews.us.webtask.io/userprofile";
 
 
+
     if (root.FNNAuth) {
         return
     }
+
+    function setupBirthdaySelects() {
+        var kcyear = document.getElementsByName("birthday-year")[0],
+            kcmonth = document.getElementsByName("birthday-month")[0],
+            kcday = document.getElementsByName("birthday-day")[0],
+            kcbirthday = document.getElementsByName("birthday")[0];
+
+        kcyear.onchange = kcmonth.onchange = kcday.onchange = call;
+
+        kcyear.addEventListener("change", validate_date);
+        kcmonth.addEventListener("change", validate_date);
+
+        function validate_date() {
+            var y = +kcyear.value,
+                m = kcmonth.value,
+                d = kcday.value;
+            if (m === "2")
+                var mlength = 28 + (!(y & 3) && ((y % 100) !== 0 || !(y & 15)));
+            else var mlength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][m - 1];
+            kcday.length = 0;
+            for (var i = 1; i <= mlength; i++) {
+                var opt = new Option();
+                opt.value = opt.text = i;
+                if (i == d) opt.selected = true;
+                kcday.add(opt);
+            }
+
+            // 1 --> 01
+            if (d <= 9) { d = "0" + d; }
+            if (m <= 9) { m = "0" + m; }
+
+            // Make the year invalid, so it won't pass later.
+            if (y < 1950) { y = "" }
+
+            kcbirthday.value = [y, m, d].join("-");
+        }
+
+        function call() {
+            var d = new Date();
+            var n = d.getFullYear() - 13;
+            for (var i = n; i >= 1950; i--) {
+                var opt = new Option();
+                opt.value = opt.text = i;
+                kcyear.add(opt);
+            }
+
+            validate_date();
+        }
+
+        if (kcbirthday.value) {
+            var existingDate = new Date(kcbirthday.value)
+            // Set the month
+            kcmonth.value = String(existingDate.getMonth() + 1)
+            kcmonth.dispatchEvent(new Event("change"))
+
+            // Set the day
+            kcday.value = String(existingDate.getDate())
+            kcday.dispatchEvent(new Event("change"))
+
+            // Set the year
+            kcyear.value = String(existingDate.getFullYear())
+            kcyear.dispatchEvent(new Event("change"))
+        }
+    }
+
+    
 
     var domain;
     var redirect;
@@ -400,13 +467,24 @@
         var profileEditor = document.getElementById('profile-editor');
         console.log(profile);
 
+        var newsletters = metadata.newsletters
+
         profileEditor.querySelector("[data-schemapath='root.email'] > div > input").value = profile.email;
+        profileEditor.querySelector("[data-schemapath='root.birthday'] > div > input").value = metadata.birthday;
         profileEditor.querySelector("[data-schemapath='root.first_name'] > div > input").value = metadata.first_name;
         profileEditor.querySelector("[data-schemapath='root.last_name'] > div > input").value = metadata.last_name;
         profileEditor.querySelector("[data-schemapath='root.display_name'] > div > input").value = metadata.display_name;
+        profileEditor.querySelector("[data-schemapath='root.zip_code'] > div > input").value = metadata.zip_code || "";
+
         profileEditor.querySelector("[data-schemapath='root.party'] > div > select").value = metadata.party;
         profileEditor.querySelector("[data-schemapath='root.gender'] > div > select").value = metadata.gender;
-        profileEditor.querySelector("[data-schemapath='root.zip_code'] > div > input").value = metadata.zip_code;
+        
+        profileEditor.querySelector("[data-schemapath='root.fb_breaking_alerts'] input").checked = newsletters.fb_breaking_alerts
+        profileEditor.querySelector("[data-schemapath='root.fn_breaking_alerts'] input").checked = newsletters.fn_breaking_alerts
+        profileEditor.querySelector("[data-schemapath='root.fn_morn_headlines'] input").checked = newsletters.fn_morn_headlines
+        profileEditor.querySelector("[data-schemapath='root.top_headline'] input").checked = newsletters.top_headline
+
+        setupBirthdaySelects();
 
 
         // // Set the default fields
@@ -438,11 +516,18 @@
             var profileEditor = document.getElementById('profile-editor');
 
             metadata.first_name = profileEditor.querySelector("[data-schemapath='root.first_name'] > div > input").value
+            metadata.birthday = profileEditor.querySelector("[data-schemapath='root.birthday'] > div > input").value
             metadata.last_name = profileEditor.querySelector("[data-schemapath='root.last_name'] > div > input").value
             metadata.display_name = profileEditor.querySelector("[data-schemapath='root.display_name'] > div > input").value
             metadata.party = profileEditor.querySelector("[data-schemapath='root.party'] > div > select").value;
             metadata.gender = profileEditor.querySelector("[data-schemapath='root.gender'] > div > select").value;
             metadata.zip_code = profileEditor.querySelector("[data-schemapath='root.zip_code'] > div > input").value || "";
+            metadata.newsletters = {
+                fb_breaking_alerts: profileEditor.querySelector("[data-schemapath='root.fb_breaking_alerts'] input").checked,
+                fn_breaking_alerts: profileEditor.querySelector("[data-schemapath='root.fn_breaking_alerts'] input").checked,
+                fn_morn_headlines: profileEditor.querySelector("[data-schemapath='root.fn_morn_headlines'] input").checked,
+                top_headline: profileEditor.querySelector("[data-schemapath='root.top_headline'] input").checked
+            }
 
 
             // var errors = profileEditor.validate()
@@ -740,14 +825,17 @@
     // After login (called from callback.html)
     const handleCallback = function(domain) {
         options = getDomainOptions(domain || root.location.hostname);
+        setupBirthdaySelects();
         getWebAuth(function(webAuth) {
             webAuth.parseHash(setResult(function(err, authResult) {
-                if (err) { return showError(err) }
                 var redirectUser = function() {
                     const redirect = retrieveTargetUrl() || root.location.origin;
                     storeTargetUrl();
                     root.location.href = redirect;
                 }
+                
+                if (err) { return redirectUser() }
+                
                 getUserProfile(function(err, profile) {
                     if (err) { return showError(err) }
                     var metadata = profile["https://example.com/metadata"];
@@ -772,16 +860,17 @@
                         e.preventDefault()
                         swal.showLoading();
 
-                        metadata.newsletters = {};
                         metadata.agreed_terms = document.querySelector("#checkboxTerms").checked;
                         metadata.first_name = firstName.value;
                         metadata.last_name = lastName.value;
                         metadata.display_name = displayName.value;
                         metadata.birthday = birthday.value;
-                        metadata.fb_breaking_alerts = document.querySelector("#fb_breaking_alerts").checked;
-                        metadata.fn_breaking_alerts = document.querySelector("#fn_breaking_alerts").checked;
-                        metadata.fn_morn_headlines = document.querySelector("#fn_morn_headlines").checked;
-                        metadata.top_headline = document.querySelector("#top_headline").checked;
+                        metadata.newsletters = {
+                            fb_breaking_alerts: document.querySelector("#fb_breaking_alerts").checked,
+                            fn_breaking_alerts: document.querySelector("#fn_breaking_alerts").checked,
+                            fn_morn_headlines: document.querySelector("#fn_morn_headlines").checked,
+                            top_headline: document.querySelector("#top_headline").checked
+                        }
                         metadata.gender = gender.value;
                         metadata.party = party.value;
                         setUserMetadata(metadata, function(err) {
