@@ -21,29 +21,29 @@ const deleteUser = (req, res) => {
         })
         .catch((err) => {
             pipeException(err, res);
-        });
+});
 };
 
 const updateUser = (req, res) => {
-    const profile = req.body;
+        const profile = req.body;
 
-    if (profile.password) {
-        return res.status(400).json({ statusCode: 400, name: "invalid_body", message: "Invalid element password. Use the Change Password functionality" }).end();
-    }
+        if (profile.password) {
+            return res.status(400).json({ statusCode: 400, name: "invalid_body", message: "Invalid element password. Use the Change Password functionality" }).end();
+        }
 
-    // TODO: map profile if needed
+        // TODO: map profile if needed
 
-    // Remove properties we don't allow the user to update
-    delete profile.email_verified;
-    delete profile.phone_verified;
-    delete profile.password;
-    delete profile.verify_email;
-    delete profile.blocked;
-    delete profile.app_metadata;
+        // Remove properties we don't allow the user to update
+        delete profile.email_verified;
+        delete profile.phone_verified;
+        delete profile.password;
+        delete profile.verify_email;
+        delete profile.blocked;
+        delete profile.app_metadata;
 
-    // TODO: validate profile
-    profile.user_metadata = profile.user_metadata || {};
-    if (profile.user_metadata.email_newsletter && !validator.isEmail(profile.user_metadata.email_newsletter)) {
+        // TODO: validate profile
+        profile.user_metadata = profile.user_metadata || {};
+        if (profile.user_metadata.email_newsletter && !validator.isEmail(profile.user_metadata.email_newsletter)) {
         // Ideally group all errors together
         return res.status(400).json({ statusCode: 400, name: "invalid_body", message: "Email newsletter is not a valid email" }).end();
     }
@@ -58,6 +58,8 @@ const updateUser = (req, res) => {
         const displayName = profile.user_metadata.display_name;
         if (hasSymbols.test(displayName)) {
             throw new Error("Invalid display name. No spaces or symbols.")
+        } else if (displayName.length > 15) {
+          throw new Error("Invalid display name. Cannot be longer than 15 characters.")
         }
         // Agreed terms
         const agreed = profile.user_metadata.agreed_terms = !!profile.user_metadata.agreed_terms;
@@ -92,12 +94,12 @@ const updateUser = (req, res) => {
     }).then(() => {
         const email = req.currentUser.email
 
-        const oldMetadata = req.currentUser.user_metadata
-        const metadata = profile.user_metadata
+        const oldMetadata = req.currentUser.user_metadata || {}
+        const metadata = profile.user_metadata || {}
 
-        // TODO Use metadata.newsletters
-        const newsletters = metadata || {}; //metadata.newsletters || {}
-        const oldNewsletters = oldMetadata || {}; // moldMetadata.newsletters
+        
+        const newsletters = metadata.newsletters || {};
+        const oldNewsletters = oldMetadata.newsletters || {};
 
         const possibleNewsletters = {
             "fb_breaking_alerts": {
