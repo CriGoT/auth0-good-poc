@@ -306,120 +306,7 @@
         }
     }
 
-    const getProfileSchema = function(profile) {
-        // const EMAIL_RE = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        const DATE_RE = /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/
-        return {
-            type: "object",
-            title: "Profile",
-            properties: {
-                // nickname: {
-                //     title: "Display Name",
-                //     type: "string",
-                //     readOnly: true,
-                //     default: profile["https://example.com/nickname"],
-                //     "propertyOrder": 1
-                // },
-                first_name: {
-                    title: "First Name",
-                    type: "string",
-                    default: "",
-                    "propertyOrder": 2
-                },
-                email: {
-                    title: "Email",
-                    type: "string",
-                    readOnly: true,
-                    default: profile.email || "",
-                    "propertyOrder": 4
-                },
-                //T0 DO: make the display name unique
-                display_name: {
-                    title: "Display Name",
-                    type: "string",
-                    default: "",
-                    propertyOrder: 1
-                },
-                // newsletter_email: {
-                //   title: "Newsletter Email",
-                //   type: "string",
-                //   default: profile.email || "",
-                //   "propertyOrder": 4.1,
-                //   pattern: EMAIL_RE,
-                //   //required: true
-                // },
-                last_name: {
-                    title: "Last Name",
-                    type: "string",
-                    default: "",
-                    "propertyOrder": 3
-                },
-                zip_code: {
-                    title: "Zip Code",
-                    type: "string",
-                    default: "",
-                    "propertyOrder": 5.1
-                },
-                birthday: {
-                    title: "Birthday",
-                    type: "string",
-                    default: "",
-                    "propertyOrder": 5,
-                    pattern: DATE_RE
-                },
-                gender: {
-                    title: "Gender",
-                    type: "string",
-                    enum: [
-                        "Not Specified",
-                        "male",
-                        "female"
-                    ],
-                    default: "Not Specified",
-                    "propertyOrder": 6
-                },
-                party: {
-                    title: "Political Views",
-                    type: "string",
-                    enum: [
-                        "liberal",
-                        "democrat",
-                        "independent",
-                        "republican",
-                        "conservative"
-                    ],
-                    default: "",
-                    "propertyOrder": 7
-                },
-                fb_breaking_alerts: {
-                    type: "boolean",
-                    format: "checkbox",
-                    title: "Subscribe to FB Breaking Alerts",
-                    default: false
-                },
-                fn_breaking_alerts: {
-                    type: "boolean",
-                    format: "checkbox",
-                    title: "Subscribe to FN Breaking Alerts",
-                    visible: true,
-                    default: false
-                },
-                fn_morn_headlines: {
-                    type: "boolean",
-                    format: "checkbox",
-                    title: "Subscribe to FN Morning Headlines",
-                    default: false,
-                },
-                top_headline: {
-                    type: "boolean",
-                    format: "checkbox",
-                    title: "Subscribe to Top Morning Headlines",
-                    default: false
-                }
-            }
-        }
-    }
-
+    
     const setupProfileEditor = function(profile) {
 
 
@@ -431,27 +318,6 @@
             document.body.classList.add("hide")
             return;
         }
-
-        // var schema = getProfileSchema(profile);
-        // Object.keys(metadata).forEach(function (key) {
-        //     if (!schema.properties[key]) {
-        //         schema.properties[key] = {
-        //             hidden: true
-        //         };
-        //     }
-        // })
-
-        // Set up the jsoneditor
-        // https://github.com/jdorn/json-editor
-        // var profileEditor = new JSONEditor(document.getElementById('profile-editor'), {
-        //     disable_edit_json: true,
-        //     disable_collapse: true,
-        //     disable_properties: true,
-        //     theme: 'barebones',
-        //     // show_errors: "always",
-        //     schema: schema
-        // });
-
 
 
         // We make the true/false string in to a boolean
@@ -486,29 +352,6 @@
 
         setupBirthdaySelects();
 
-
-        // // Set the default fields
-        // Object.keys(profileEditor.schema.properties).forEach(function(cProp) {
-        //     var sch = profileEditor.schema.properties[cProp];
-        //     var def = sch.default
-        //     if (sch.hidden) {
-        //         document.querySelector("[data-schemapath=\"root." + cProp + "\"]").style.display = "none"
-        //     }
-        //     if (def !== undefined && metadata[cProp] === undefined) {
-        //         metadata[cProp] = def;
-        //     }
-        // })
-
-        // //style the user form 
-        // const lineUserProfile = `<div class='hr'></div>`;
-        // const stylingNewsletterUserProfile = `<div><h3>Newsletter Subscriptions</h3>${lineUserProfile}</div>`;
-
-        // //TODO: make this append once only
-        // $('h3 span').append(lineUserProfile);
-        // $('div[data-schemapath="root.party"]').append(stylingNewsletterUserProfile);
-
-
-        // profileEditor.setValue(metadata);
 
         // Save the metadata, when we click on the save button
         document.querySelector("#save-profile").addEventListener("click", function() {

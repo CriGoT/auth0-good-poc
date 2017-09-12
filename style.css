@@ -21,6 +21,7 @@ body[data-auth="true"] .hide-login {
     display: none;
 }
 
+
 /*********************** SIGN UP ************************/
 
 body.signup,
@@ -68,7 +69,9 @@ label {
     display: none;
 }
 
+
 /*progressbar*/
+
 #progressbar {
     margin-bottom: 30px;
     overflow: hidden;
@@ -101,6 +104,7 @@ label {
     margin: 0 auto 5px auto;
 }
 
+
 /*progressbar connectors*/
 
 #progressbar li:after {
@@ -120,6 +124,7 @@ label {
     content: none;
 }
 
+
 /*The number of the steps and the connector before it = green*/
 
 #progressbar li.active:before,
@@ -127,6 +132,7 @@ label {
     background: #002e56;
     color: white;
 }
+
 
 
 
@@ -201,6 +207,7 @@ body {
 
 
 
+
 /*temporary fix for social media images that are not the same size*/
 
 #profile-image img {
@@ -216,12 +223,14 @@ body {
 }
 
 #change-pass {
-   /* background: url(/static/v/all/img/live-fyre/icons.png) 0 -38px no-repeat;*/
+    /* background: url(/static/v/all/img/live-fyre/icons.png) 0 -38px no-repeat;*/
     background: url(/auth0-good-poc/images/icons.png) 0 -38px no-repeat;
 }
 
 
+
 /* JSON Editor */
+
 
 /*div#profile-editor>div>div {
     border: none !important;
@@ -243,7 +252,7 @@ input[type='text']:not(.form-control) {
 
 div[data-schematype="string"] label {
     color: #666;
-    font: 400 14px arial,sans-serif;
+    font: 400 14px arial, sans-serif;
     overflow: visible;
     height: auto;
     display: inline-block;
@@ -256,10 +265,16 @@ div[data-schematype="string"] label {
 
 div[data-schematype="boolean"] {
     margin-left: 40px;
-    width: 273px;
-    font: 400 14px arial,sans-serif;
+    /*    width: 273px;*/
+    font: 400 14px arial, sans-serif;
     color: #000;
     margin: 0 0 12px;
+}
+
+div[data-schematype="boolean"]>input {
+    font-weight: normal;
+    display: inline-block;
+    width: auto;
 }
 
 div[data-schemapath="root.party"] {
@@ -293,7 +308,7 @@ button#save-profile {
 }
 
 #back-button span {
-   /* background: url(/static/v/all/img/live-fyre/arrow-white.png) no-repeat;*/
+    /* background: url(/static/v/all/img/live-fyre/arrow-white.png) no-repeat;*/
     background: url(/auth0-good-poc/images/arrow-white.png) no-repeat;
     height: 6px;
     width: 14px;
@@ -341,7 +356,7 @@ select {
 }
 
 .profile-footer p {
-    font: 400 11px arial,sans-serif;
+    font: 400 11px arial, sans-serif;
     color: #999;
     margin: 0 0 3px;
     padding: 0;
@@ -356,30 +371,67 @@ select {
     width: 60px;
     height: 56px;
     margin: 0 12px;
-/*    background: url(/static/v/all/img/live-fyre/fn-logo-footer.png) no-repeat;*/
-background: url(/auth0-good-poc/images/fn-logo-footer.png) no-repeat;
+    /*    background: url(/static/v/all/img/live-fyre/fn-logo-footer.png) no-repeat;*/
+    background: url(/auth0-good-poc/images/fn-logo-footer.png) no-repeat;
     float: left;
 }
 
-.errmsg { display: none !important; }
-div#errors > .error {
+.errmsg {
+    display: none !important;
+}
+
+div#errors>.error {
     background: red;
     color: white;
     padding: 10px;
     margin: 13px 0;
 }
 
+
 /*
 Political timeline*/
-#politicalViewsSliderWrapper { padding: 12px 0 0 !important; }
-.capture_slider_list ul, #politicalViews_container { width: 440px; }
-#politicalViewsSliderWrapper { display: inline; padding: 0; width: 450px; }
-#politicalViews_container { height: 35px; }
-#politicalViews_base.capture_slider_base { margin: 6px 0 10px; }
-#politicalViews_labels { font-size: 0; padding-left: 0;}
-#politicalViews_labels li { width: 92px; font-size: 12px; }
-#politicalViews_labels li:first-child { margin: 0 0 0 2px; }
-#politicalViewsSliderWrapper { position: relative; }
+
+#politicalViewsSliderWrapper {
+    padding: 12px 0 0 !important;
+}
+
+.capture_slider_list ul,
+#politicalViews_container {
+    width: 440px;
+}
+
+#politicalViewsSliderWrapper {
+    display: inline;
+    padding: 0;
+    width: 450px;
+}
+
+#politicalViews_container {
+    height: 35px;
+}
+
+#politicalViews_base.capture_slider_base {
+    margin: 6px 0 10px;
+}
+
+#politicalViews_labels {
+    font-size: 0;
+    padding-left: 0;
+}
+
+#politicalViews_labels li {
+    width: 92px;
+    font-size: 12px;
+}
+
+#politicalViews_labels li:first-child {
+    margin: 0 0 0 2px;
+}
+
+#politicalViewsSliderWrapper {
+    position: relative;
+}
+
 .capture_slider_base {
     display: block;
     position: relative;
@@ -391,6 +443,7 @@ Political timeline*/
     -webkit-border-radius: 3px;
     border-radius: 3px;
 }
+
 .capture_slider_base .capture_slider_marker {
     -moz-border-radius: 7px;
     -webkit-border-radius: 7px;
@@ -402,14 +455,17 @@ Political timeline*/
     margin-left: -10px;
     height: 16px;
 }
+
 .capture_slider_list ul {
     text-align: left;
     width: 480px;
 }
+
 .capture_slider_list ul li {
     display: inline-block!important;
     text-align: left;
 }
+
 .capture_slider_list ul li {
     display: inline;
     margin: 0;
@@ -428,5 +484,3 @@ Political timeline*/
     top: 13px;
     left: 1px;
 }
-
-
