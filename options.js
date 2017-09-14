@@ -77,4 +77,5 @@ window.DOMAIN_OPTIONS = {
             "popup": {
                 //"ignoreCasing": true
             }
-        };
+        }
+    };
