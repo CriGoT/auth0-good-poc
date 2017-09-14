@@ -1,19 +1,19 @@
 (function(root) {
     // Storage keys
-    const storagePrefix = "fnnauth:";
-    const storageTokenKey = storagePrefix + "accessToken";
-    const storageProfileKey = storagePrefix + "profile";
-    const storageTargetUrlKey = storagePrefix + "targetUrl";
+    var storagePrefix = "fnnauth:";
+    var storageTokenKey = storagePrefix + "accessToken";
+    var storageProfileKey = storagePrefix + "profile";
+    var storageTargetUrlKey = storagePrefix + "targetUrl";
 
-    const storage = root.sessionStorage;
-    const document = root.document;
-    const auth0jslocation = "https://cdn.auth0.com/js/auth0/8.9.2/auth0.min.js";
-    const profileApiUrl = "https://testing-foxnews.us.webtask.io/userprofile";
+    var storage = root.sessionStorage;
+    var document = root.document;
+    var auth0jslocation = "https://cdn.auth0.com/js/auth0/8.9.2/auth0.min.js";
+    var profileApiUrl = "https://testing-foxnews.us.webtask.io/userprofile";
 
 
 
     if (root.FNNAuth) {
-        return
+        return;
     }
 
     function setupBirthdaySelects() {
@@ -31,14 +31,15 @@
             var y = +kcyear.value,
                 m = kcmonth.value,
                 d = kcday.value;
-            if (m === "2")
-                var mlength = 28 + (!(y & 3) && ((y % 100) !== 0 || !(y & 15)));
-            else var mlength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][m - 1];
+            var mlength;
+            if (m === "2") {
+                mlength = 28 + (!(y & 3) && ((y % 100) !== 0 || !(y & 15)));
+            } else { mlength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][m - 1]; }
             kcday.length = 0;
             for (var i = 1; i <= mlength; i++) {
                 var opt = new Option();
                 opt.value = opt.text = i;
-                if (i == d) opt.selected = true;
+                if (i === d) {opt.selected = true;}
                 kcday.add(opt);
             }
 
@@ -47,7 +48,7 @@
             if (m <= 9) { m = "0" + m; }
 
             // Make the year invalid, so it won't pass later.
-            if (y < 1950) { y = "" }
+            if (y < 1950) { y = ""; }
 
             kcbirthday.value = [y, m, d].join("-");
         }
@@ -65,18 +66,18 @@
         }
 
         if (kcbirthday.value) {
-            var existingDate = new Date(kcbirthday.value)
+            var existingDate = new Date(kcbirthday.value);
             // Set the month
-            kcmonth.value = String(existingDate.getMonth() + 1)
-            kcmonth.dispatchEvent(new Event("change"))
+            kcmonth.value = String(existingDate.getMonth() + 1);
+            kcmonth.dispatchEvent(new Event("change"));
 
             // Set the day
-            kcday.value = String(existingDate.getDate())
-            kcday.dispatchEvent(new Event("change"))
+            kcday.value = String(existingDate.getDate());
+            kcday.dispatchEvent(new Event("change"));
 
             // Set the year
-            kcyear.value = String(existingDate.getFullYear())
-            kcyear.dispatchEvent(new Event("change"))
+            kcyear.value = String(existingDate.getFullYear());
+            kcyear.dispatchEvent(new Event("change"));
         }
     }
 
@@ -88,43 +89,43 @@
     var webAuth;
     var options;
 
-    const showError = function(err) {
+    var showError = function(err) {
         swal({
             type: "error",
             title: "Uh Oh",
             text: err.message || err
         });
-    }
+    };
 
-    const setAuthAttributeInBody = function() {
+    var setAuthAttributeInBody = function() {
         document.body.setAttribute("data-auth", isAuthenticated().toString());
-    }
+    };
 
-    const callProfileApi = function(method, body, callback) {
-        if (callback == undefined) {
+    var callProfileApi = function(method, body, callback) {
+        if (callback === undefined) {
             callback = body;
             body = undefined;
         }
 
-        if (!isAuthenticated()) return callback(new Error("The user has to login to set the profile"));
+        if (!isAuthenticated()) { return callback(new Error("The user has to login to set the profile"));}
 
         silentLogin(setResult(function(err, authResult) {
-            if (!isAuthenticated()) return callback(new Error("The user has to login to set the profile"));
+            if (!isAuthenticated()) {return callback(new Error("The user has to login to set the profile"));}
 
-            const req = new XMLHttpRequest()
+            var req = new XMLHttpRequest();
             req.open(method, profileApiUrl);
             req.setRequestHeader('Authorization', 'Bearer ' + retrieveAccessToken());
             req.setRequestHeader('Content-type', 'application/json');
             req.onreadystatechange = function() {
-                if (req.readyState == 4) {
+                if (req.readyState === 4) {
                     if (req.status >= 400) {
-                        var err = req.responseText
+                        var err = req.responseText;
                         try {
-                            err = JSON.parse(err)
-                            err = err.message || err.error
+                            err = JSON.parse(err);
+                            err = err.message || err.error;
                         } catch (e) {}
 
-                        return callback(new Error(err))
+                        return callback(new Error(err));
                     }
                     callback(null, req.responseText && JSON.parse(req.responseText));
                 }
@@ -138,42 +139,42 @@
     };
 
 
-    const getDomainOptions = function(domain) {
+    var getDomainOptions = function(domain) {
         if (!options) {
             // This is defined in options.js
             options = DOMAIN_OPTIONS[domain];
         }
         return options;
-    }
+    };
 
-    const loadJs = function(src, callback) {
-        const script = document.createElement("script");
+    var loadJs = function(src, callback) {
+        var script = document.createElement("script");
         script.onload = callback;
         script.src = src;
         document.head.appendChild(script);
-    }
+    };
 
-    const store = function(key, value) {
+    var store = function(key, value) {
         if (value !== undefined) {
             storage.setItem(key, JSON.stringify(value));
         } else {
             storage.removeItem(key);
         }
-    }
+    };
 
-    const retrieve = function(key) {
+    var retrieve = function(key) {
         return JSON.parse(storage.getItem(key));
-    }
+    };
 
     //binding the value to 'this' & adding it or retrieving it from storage 
-    const storeAccessToken = store.bind(null, storageTokenKey);
-    const storeProfile = store.bind(null, storageProfileKey); // storeProfile({...}) the equivalent of store("fnnauth:profile", {...})
-    const storeTargetUrl = store.bind(null, storageTargetUrlKey);
-    const retrieveAccessToken = retrieve.bind(null, storageTokenKey);
-    const retrieveProfile = retrieve.bind(null, storageProfileKey);
-    const retrieveTargetUrl = retrieve.bind(null, storageTargetUrlKey); // retrieveTargetUrl() instead of retrieve("fnnnauth:...")
+    var storeAccessToken = store.bind(null, storageTokenKey);
+    var storeProfile = store.bind(null, storageProfileKey); // storeProfile({...}) the equivalent of store("fnnauth:profile", {...})
+    var storeTargetUrl = store.bind(null, storageTargetUrlKey);
+    var retrieveAccessToken = retrieve.bind(null, storageTokenKey);
+    var retrieveProfile = retrieve.bind(null, storageProfileKey);
+    var retrieveTargetUrl = retrieve.bind(null, storageTargetUrlKey); // retrieveTargetUrl() instead of retrieve("fnnnauth:...")
 
-    const setResult = function(callback, updateProfile) {
+    var setResult = function(callback, updateProfile) {
         return function(err, authResult) {
             storeAccessToken(authResult && authResult.accessToken);
 
@@ -184,11 +185,11 @@
             }
 
             callback(err, authResult);
-        }
-    }
+        };
+    };
 
-    const createLink = function(text, className, callback) {
-        const link = document.createElement("a");
+    var createLink = function(text, className, callback) {
+        var link = document.createElement("a");
         link.className = className;
         link.innerHTML = text;
         if (link.addEventListener) {
@@ -197,9 +198,9 @@
             link.attachEvent('onclick', callback);
         }
         return link;
-    }
+    };
 
-    const changePassword = function() {
+    var changePassword = function() {
         swal({
             title: 'Change Password',
             text: "Are you sure you want to change your password?",
@@ -215,30 +216,30 @@
                 // This will send an email
                 getUserProfile(function(err, profile) {
                     if (err) {
-                        err.message = err.message || err.description
-                        return swal({ type: "error", title: "Uh Oh", text: err.message })
+                        err.message = err.message || err.description;
+                        return swal({ type: "error", title: "Uh Oh", text: err.message });
                     }
                     webAuth.changePassword({
                         connection: 'Username-Password-Authentication',
                         email: profile.email
                     }, function(err, resp) {
                         if (err) {
-                            err.message = err.description
-                            swal({ type: "error", title: "Uh Oh", text: err.message })
+                            err.message = err.description;
+                            swal({ type: "error", title: "Uh Oh", text: err.message });
                         } else {
-                            swal({ type: "success", title: "Success", text: "An email has been sent to your inbox." })
+                            swal({ type: "success", title: "Success", text: "An email has been sent to your inbox." });
                         }
                     });
                 });
             });
-        })
-    }
+        });
+    };
 
-    const deleteUserProfileApi = function(callback) {
+    var deleteUserProfileApi = function(callback) {
         callProfileApi("DELETE", callback);
     };
 
-    const deleteAccount = function() {
+    var deleteAccount = function() {
         swal({
             title: 'Delete Account',
             text: "Are you sure you want to delete your account?",
@@ -255,28 +256,28 @@
                 getUserManagement(function(mgmt) {
                     getUserProfile(function(err, profile) {
                         if (err) {
-                            err.message = err.message || err.description
-                            return swal({ type: "error", title: "Oops!", text: err.message })
+                            err.message = err.message || err.description;
+                            return swal({ type: "error", title: "Oops!", text: err.message });
                         }
 
                         deleteUserProfileApi(function(err) {
                             if (err) {
-                                err.message = err.description
-                                swal({ type: "error", title: "uh oh", text: err.message })
+                                err.message = err.description;
+                                swal({ type: "error", title: "uh oh", text: err.message });
                             } else {
                                 swal({ type: "success", title: "Sorry to see you go!", text: "" }).then(function() {
                                     startLogout();
-                                })
+                                });
                             }
                         });
                     });
                 });
-            }, 1000)
+            }, 1000);
 
-        })
-    }
+        });
+    };
 
-    const profileHandlers = function(profile) {
+    var profileHandlers = function(profile) {
         // Handle change password
         document.getElementById("change-pass").addEventListener("click", changePassword);
         document.getElementById("delete-account").addEventListener("click", deleteAccount);
@@ -289,33 +290,33 @@
         //         history.go(-1);
         //     })
         // }
-    }
+    };
 
-    const renderProfileFields = function(profile) {
+    var renderProfileFields = function(profile) {
         // Display dynamic fields in the profile, using the data-user-field attribute
         var elements = document.querySelectorAll("[data-user-field]");
         for (var i = elements.length - 1; i >= 0; i--) {
             var el = elements[i];
             var field = el.getAttribute("data-user-field");
-            var value = profile[field] || profile["https://example.com/" + field]
+            var value = profile[field] || profile["https://example.com/" + field];
             if (el.tagName === "IMG") {
-                el.setAttribute("src", value)
+                el.setAttribute("src", value);
             } else {
                 el.textContent = value;
             }
         }
-    }
+    };
 
 
-    const setupProfileEditor = function(profile) {
+    var setupProfileEditor = function(profile) {
 
 
 
         // Get the metadata
-        const metadata = profile["https://example.com/metadata"] || {};
+        var metadata = profile["https://example.com/metadata"] || {};
         if (!metadata.agreed_terms) {
             startLogout();
-            document.body.classList.add("hide")
+            document.body.classList.add("hide");
             return;
         }
 
@@ -328,19 +329,19 @@
 
 
         // We make the true/false string in to a boolean
-        // TODO: This is a hack
+        // This is a hack
         //       If there are humans with weird names like "false" or "true", this will probably fail.
         Object.keys(metadata).forEach(function(key) {
             if (["true", "false"].includes(metadata[key])) {
                 metadata[key] = metadata[key] === "true";
             }
-        })
+        });
 
 
         var profileEditor = document.getElementById('profile-editor');
         console.log(profile);
 
-        var newsletters = metadata.newsletters
+        var newsletters = metadata.newsletters;
 
         profileEditor.querySelector("[data-schemapath='root.email'] > div > input").value = profile.email;
         profileEditor.querySelector("[data-schemapath='root.birthday'] > div > input").value = metadata.birthday;
@@ -352,10 +353,10 @@
         profileEditor.querySelector("[data-schemapath='root.party'] > div > select").value = metadata.party;
         profileEditor.querySelector("[data-schemapath='root.gender'] > div > select").value = metadata.gender;
 
-        profileEditor.querySelector("[data-schemapath='root.fb_breaking_alerts'] input").checked = newsletters.fb_breaking_alerts
-        profileEditor.querySelector("[data-schemapath='root.fn_breaking_alerts'] input").checked = newsletters.fn_breaking_alerts
-        profileEditor.querySelector("[data-schemapath='root.fn_morn_headlines'] input").checked = newsletters.fn_morn_headlines
-        profileEditor.querySelector("[data-schemapath='root.top_headline'] input").checked = newsletters.top_headline
+        profileEditor.querySelector("[data-schemapath='root.fb_breaking_alerts'] input").checked = newsletters.fb_breaking_alerts;
+        profileEditor.querySelector("[data-schemapath='root.fn_breaking_alerts'] input").checked = newsletters.fn_breaking_alerts;
+        profileEditor.querySelector("[data-schemapath='root.fn_morn_headlines'] input").checked = newsletters.fn_morn_headlines;
+        profileEditor.querySelector("[data-schemapath='root.top_headline'] input").checked = newsletters.top_headline;
 
         setupBirthdaySelects();
 
@@ -365,10 +366,10 @@
 
             var profileEditor = document.getElementById('profile-editor');
 
-            metadata.first_name = profileEditor.querySelector("[data-schemapath='root.first_name'] > div > input").value
-            metadata.birthday = profileEditor.querySelector("[data-schemapath='root.birthday'] > div > input").value
-            metadata.last_name = profileEditor.querySelector("[data-schemapath='root.last_name'] > div > input").value
-            metadata.display_name = profileEditor.querySelector("[data-schemapath='root.display_name'] > div > input").value
+            metadata.first_name = profileEditor.querySelector("[data-schemapath='root.first_name'] > div > input").value;
+            metadata.birthday = profileEditor.querySelector("[data-schemapath='root.birthday'] > div > input").value;
+            metadata.last_name = profileEditor.querySelector("[data-schemapath='root.last_name'] > div > input").value;
+            metadata.display_name = profileEditor.querySelector("[data-schemapath='root.display_name'] > div > input").value;
             metadata.party = profileEditor.querySelector("[data-schemapath='root.party'] > div > select").value;
             metadata.gender = profileEditor.querySelector("[data-schemapath='root.gender'] > div > select").value;
             metadata.zip_code = profileEditor.querySelector("[data-schemapath='root.zip_code'] > div > input").value || "";
@@ -390,11 +391,11 @@
 
 
 
-            }
+            };
 
 
             // var errors = profileEditor.validate()
-            var errorsContainer = document.querySelector("#errors")
+            var errorsContainer = document.querySelector("#errors");
             errorsContainer.innerHTML = "";
             if (errors.length) {
                 errors.forEach(function(err) {
@@ -404,15 +405,15 @@
                     if (err.path === "root.birthday") {
                         err.message = "Invalid Birthday - Must be in the format 'YYYY-MM-DD'";
                     }
-                    err.elm = document.createElement("div")
+                    err.elm = document.createElement("div");
                     err.elm.textContent = err.message;
                     err.elm.setAttribute("class", "error");
                     errorsContainer.appendChild(err.elm);
-                })
+                });
 
                 return;
             }
-            swal.showLoading()
+            swal.showLoading();
 
 
             setUserMetadata(metadata, function(err) {
@@ -420,29 +421,29 @@
                     return showError(err);
                 }
                 swal({ type: "success", title: "Saved!" });
-            })
+            });
         });
-    }
+    };
 
-    const renderUserInfo = function() {
+    var renderUserInfo = function() {
         getUserProfile(function(err, profile) {
             if (err) {
                 console.error("Error retrieving the user profile", err);
                 return;
             }
 
-            profileHandlers(profile)
-            renderProfileFields(profile)
+            profileHandlers(profile);
+            renderProfileFields(profile);
             setupProfileEditor(profile);
         });
-    }
+    };
 
-    const createWebAuth = function() {
+    var createWebAuth = function() {
         webAuth = webAuth || new auth0.WebAuth(options.default);
         return webAuth;
-    }
+    };
 
-    const loadAuth0js = function(callback) {
+    var loadAuth0js = function(callback) {
         if (!root.auth0) {
             loadJs(auth0jslocation, function() {
                 callback(createWebAuth());
@@ -450,23 +451,23 @@
         } else {
             callback(createWebAuth());
         }
-    }
+    };
 
-    const getWebAuth = function(callback) {
+    var getWebAuth = function(callback) {
         loadAuth0js(function() {
             //options.default.audience = "https://sso.foxnews.com/userinfo"
             webAuth = webAuth || new root.auth0.WebAuth(options.default);
             callback(webAuth);
         });
-    }
+    };
 
-    const silentLogin = function(callback) {
+    var silentLogin = function(callback) {
 
         // Renew auth (basically, login)
         getWebAuth(function(webAuth) {
             webAuth.renewAuth(options.silent, setResult(callback));
         });
-    }
+    };
 
 
     // User/Password  
@@ -482,9 +483,9 @@
     //                                              \-> Yaaay
 
 
-    const auth0Logout = window.auth0logout = function(cb) {
+    var auth0Logout = window.auth0logout = function(cb) {
         getWebAuth(function(webAuth) {
-            const iframe = document.createElement("iframe");
+            var iframe = document.createElement("iframe");
             iframe.style.display = "none";
             iframe.src = webAuth.client.buildLogoutUrl();
             iframe.onload = iframe.onerror = cb;
@@ -494,10 +495,10 @@
                             document.body.removeChild(iframe);
                         }, 1500);*/
         });
-    }
+    };
 
-    const startLogout = function(e) {
-        if (e) e.preventDefault();
+    var startLogout = function(e) {
+        if (e) { e.preventDefault(); }
 
         // Empty the storage data (by not passing anything)
         storeAccessToken();
@@ -505,11 +506,11 @@
         swal.showLoading();
         auth0Logout(function() {
             location.reload();
-        })
-    }
+        });
+    };
 
-    const startLogin = function(e) {
-        if (e) e.preventDefault();
+    var startLogin = function(e) {
+        if (e){ e.preventDefault();}
 
         storeTargetUrl(window.location.href);
         getWebAuth(function(webAuth) {
@@ -522,9 +523,9 @@
             //           subscribed: false instead of "false"
             webAuth.authorize(options.authorize);
         });
-    }
+    };
 
-    const authnCallback = function(err, authResult) {
+    var authnCallback = function(err, authResult) {
         if (err || !authResult || !authResult.accessToken) {
             console.log("Unsuccessful attempt to login", err, authResult);
         } else {
@@ -532,20 +533,20 @@
             renderUserInfo();
         }
         setAuthAttributeInBody();
-    }
+    };
 
-    const getUserProfile = function(callback, useSilentLogin) {
-        if (!isAuthenticated()) return callback(new Error("The user has to login to get the profile"));
+    var getUserProfile = function(callback, useSilentLogin) {
+        if (!isAuthenticated()) {return callback(new Error("The user has to login to get the profile"));}
         useSilentLogin = useSilentLogin !== false;
 
         // Try to get it from the storage
-        const profile = retrieveProfile();
+        var profile = retrieveProfile();
 
         // If it's cached in the storage, we stop here and callback
-        if (profile) return callback(null, profile);
+        if (profile){ return callback(null, profile);}
 
         //retrieve from Auth0
-        const token = retrieveAccessToken();
+        var token = retrieveAccessToken();
 
         getWebAuth(function(webAuth) {
             webAuth.client.userInfo(token, function(err, user) {
@@ -564,34 +565,34 @@
                 callback(null, user);
             });
         });
-    }
+    };
 
-    const getUserManagement = function(cb) {
+    var getUserManagement = function(cb) {
         silentLogin(setResult(function(err, authResult) {
             loadAuth0js(function() {
-                const mgmt = new root.auth0.Management({
+                var mgmt = new root.auth0.Management({
                     domain: options.default.domain,
                     token: authResult.idToken
                 });
-                cb(mgmt)
+                cb(mgmt);
             });
         }));
-    }
+    };
 
-    const setUserProfile = window.setUserProfile = function(profile, callback) {
+    var setUserProfile = window.setUserProfile = function(profile, callback) {
         callProfileApi("PATCH", profile, function(err, data) {
-            if (err) return callback(err);
+            if (err){ return callback(err);}
             // we get a new token to get the updated profile
             silentLogin(setResult(function() {
                 getUserProfile(callback);
             }, true));
         });
-    }
+    };
 
-    // Use the management constructor to patch the user metadata
+    // Use the management varructor to patch the user metadata
     // and store the the updated profile in the storage
-    const setUserMetadata = function(profile, callback) {
-        if (!isAuthenticated()) return callback(new Error("The user has to login to set the profile"));
+    var setUserMetadata = function(profile, callback) {
+        if (!isAuthenticated()) {return callback(new Error("The user has to login to set the profile"));}
 
         /*silentLogin(setResult(function(err, authResult) {
             if (!isAuthenticated()) return callback(new Error("The user has to login to set the profile"));
@@ -606,19 +607,19 @@
             });
         }));*/
 
-        setUserProfile({ user_metadata: profile }, callback)
-    }
+        setUserProfile({ user_metadata: profile }, callback);
+    };
 
-    const isAuthenticated = function() {
+    var isAuthenticated = function() {
         return !!retrieveAccessToken();
-    }
+    };
 
-    const login = function(callback) {
+    var login = function(callback) {
         if (isAuthenticated()) {
             getUserProfile(callback);
         } else {
             silentogin(function(err, authResult) {
-                if (err) return callback(err);
+                if (err) {return callback(err);}
 
                 if (isAuthenticated()) {
                     getUserProfile(callback, false);
@@ -627,17 +628,17 @@
                 }
             });
         }
-    }
+    };
 
-    const initialize = function(profileElSel, loginElSel) {
+    var initialize = function(profileElSel, loginElSel) {
 
         // Get elements from the DOM, based on the ids
-        profileElement = document.getElementById(profileElSel)
-        loginElement = document.getElementById(loginElSel)
+        profileElement = document.getElementById(profileElSel);
+        loginElement = document.getElementById(loginElSel);
 
         // Create the login/logout buttons
-        var loginBtn = document.querySelector("a.login")
-        var logoutBtn = document.querySelector(".fnnauth0-logout")
+        var loginBtn = document.querySelector("a.login");
+        var logoutBtn = document.querySelector(".fnnauth0-logout");
         var changePassEl = document.getElementById("change-pass");
 
         if (!loginBtn) {
@@ -647,7 +648,11 @@
         }
 
         if (!logoutBtn) {
-            changePassEl && changePassEl.parentElement.insertBefore(createLink("Log Out", "fnnauth0-logout", startLogout), document.getElementById("change-pass"));
+            if (changePassEl) {
+                changePassEl.parentElement.insertBefore(createLink("Log Out", "fnnauth0-logout", startLogout), document.getElementById("change-pass"));
+
+            }
+
         } else {
             logoutBtn.onclick = startLogout;
         }
@@ -661,10 +666,10 @@
         } else {
             silentLogin(authnCallback);
         }
-    }
+    };
 
-    // Class Constructor
-    const FNNAuth = function(domainName, useRedirect) {
+    // Class varructor
+    var FNNAuth = function(domainName, useRedirect) {
         domain = domainName || root.location.hostname;
         redirect = useRedirect !== false;
         options = getDomainOptions(domain);
@@ -677,8 +682,8 @@
     FNNAuth.prototype.getUserProfile = getUserProfile;
     FNNAuth.prototype.setUserMetadata = setUserMetadata;
 
-    const staticInitialize = function(profileElement, loginElement, domain, redirect) {
-        const instance = new FNNAuth(domain, redirect);
+    var staticInitialize = function(profileElement, loginElement, domain, redirect) {
+        var instance = new FNNAuth(domain, redirect);
         instance.initialize(profileElement, loginElement);
     };
 
@@ -686,24 +691,24 @@
     // Why camelCase by default ONLY on login? Not on the other routes.
 
     // After login (called from callback.html)
-    const handleCallback = function(domain) {
+    var handleCallback = function(domain) {
         options = getDomainOptions(domain || root.location.hostname);
         setupBirthdaySelects();
         getWebAuth(function(webAuth) {
             webAuth.parseHash(setResult(function(err, authResult) {
                 var redirectUser = function() {
-                    const redirect = retrieveTargetUrl() || root.location.origin;
+                    var redirect = retrieveTargetUrl() || root.location.origin;
                     storeTargetUrl();
                     root.location.href = redirect;
-                }
+                };
 
-                if (err) { return redirectUser() }
+                if (err) { return redirectUser(); }
 
                 getUserProfile(function(err, profile) {
-                    if (err) { return showError(err) }
+                    if (err) { return showError(err); }
                     var metadata = profile["https://example.com/metadata"];
                     if (metadata.agreed_terms) {
-                        return redirectUser()
+                        return redirectUser();
                     }
 
                     var firstName = document.getElementById("first_name");
@@ -720,7 +725,7 @@
 
                     document.body.classList.remove("hide");
                     document.querySelector("form.new-user").addEventListener("submit", function(e) {
-                        e.preventDefault()
+                        e.preventDefault();
                         swal.showLoading();
 
                         metadata.agreed_terms = document.querySelector("#checkboxTerms").checked;
@@ -742,7 +747,7 @@
                             //     fox_fan_scoop: document.querySelector('#fox_fan_scoop').checked,
                             //     fox_nation_fired_up: document.querySelector('#fox_nation_fired_up').checked,
                             //     halftime_report: document.querySelector('#halftime_report').checked
-                        }
+                        };
                         metadata.gender = gender.value;
                         metadata.party = party.value;
                         setUserMetadata(metadata, function(err) {
@@ -750,13 +755,13 @@
                                 return showError(err);
                             }
                             redirectUser();
-                        })
-                    })
+                        });
+                    });
                 });
 
             }));
         });
-    }
+    };
 
     // index.html             fnnauth.js
     // FNNAuth.initialize --> staticInitialize --> new FnnAuth().initialize
@@ -764,11 +769,11 @@
     //called in the html
     FNNAuth.initialize = staticInitialize;
     FNNAuth.handleCallback = handleCallback;
-    FNNAuth.showError = showError
+    FNNAuth.showError = showError;
 
     //making it global 
     root.FNNAuth = FNNAuth;
-})(window)
+})(window);
 
 
 
