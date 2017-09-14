@@ -414,7 +414,7 @@
             }
             swal.showLoading()
 
-     
+
             setUserMetadata(metadata, function(err) {
                 if (err) {
                     return showError(err);
@@ -636,8 +636,21 @@
         loginElement = document.getElementById(loginElSel)
 
         // Create the login/logout buttons
-        loginElement.appendChild(createLink("Login", "fnnauth0-login", startLogin));
-        document.getElementById("change-pass").parentElement.insertBefore(createLink("Log Out", "fnnauth0-logout", startLogout), document.getElementById("change-pass"));
+        var loginBtn = document.querySelector("a.login")
+        var logoutBtn = document.querySelector(".fnnauth0-logout")
+        var changePassEl = document.getElementById("change-pass");
+
+        if (!loginBtn) {
+            loginElement.appendChild(createLink("Login", "fnnauth0-login", startLogin));
+        } else {
+            loginBtn.onclick = startLogin;
+        }
+
+        if (!logoutBtn) {
+            changePassEl && changePassEl.parentElement.insertBefore(createLink("Log Out", "fnnauth0-logout", startLogout), document.getElementById("change-pass"));
+        } else {
+            logoutBtn.onclick = startLogout;
+        }
 
         // Set auth state in the body element
         setAuthAttributeInBody();
@@ -720,15 +733,15 @@
                             fn_breaking_alerts: document.querySelector("#fn_breaking_alerts").checked,
                             fn_morn_headlines: document.querySelector("#fn_morn_headlines").checked,
                             top_headline: document.querySelector("#top_headline").checked
-                        //     fn_opinion_headlines: document.querySelector('#fn_opinion_headlines').checked,
-                        //     fn_fox_411_newsletter: document.querySelector('#fn_fox_411_newsletter').checked,
-                        //     fn_science_and_technology: document.querySelector('#fn_science_and_technology').checked,
-                        //     fb_morning_headlines: document.querySelector('#fb_morning_headlines').checked,
-                        //     fn_health_newsletter: document.querySelector('#fn_health_newsletter').checked,
-                        //     fb_most_popular_content: document.querySelector('#fb_most_popular_content').checked,
-                        //     fox_fan_scoop: document.querySelector('#fox_fan_scoop').checked,
-                        //     fox_nation_fired_up: document.querySelector('#fox_nation_fired_up').checked,
-                        //     halftime_report: document.querySelector('#halftime_report').checked
+                            //     fn_opinion_headlines: document.querySelector('#fn_opinion_headlines').checked,
+                            //     fn_fox_411_newsletter: document.querySelector('#fn_fox_411_newsletter').checked,
+                            //     fn_science_and_technology: document.querySelector('#fn_science_and_technology').checked,
+                            //     fb_morning_headlines: document.querySelector('#fb_morning_headlines').checked,
+                            //     fn_health_newsletter: document.querySelector('#fn_health_newsletter').checked,
+                            //     fb_most_popular_content: document.querySelector('#fb_most_popular_content').checked,
+                            //     fox_fan_scoop: document.querySelector('#fox_fan_scoop').checked,
+                            //     fox_nation_fired_up: document.querySelector('#fox_nation_fired_up').checked,
+                            //     halftime_report: document.querySelector('#halftime_report').checked
                         }
                         metadata.gender = gender.value;
                         metadata.party = party.value;
@@ -771,5 +784,3 @@
 //TO DO: connect with spot IM commenting
 //TO DO: way to easily migrate users
 //TO DO: add official logo
-
-
