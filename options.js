@@ -22,7 +22,8 @@ window.DOMAIN_OPTIONS = {
             "silent": {
                 "usePostMessage": true
             },
-            "popup": {
+            "link": {
+                "clientID": "3ys8tHNcg8hzzUeV-nizksE1lYw3bvBX", // ClientID with sso_disabled
                 //"ignoreCasing": true
             }
         },

@@ -253,23 +253,21 @@
 
             setTimeout(function() {
                 swal.showLoading();
-                getUserManagement(function(mgmt) {
-                    getUserProfile(function(err, profile) {
-                        if (err) {
-                            err.message = err.message || err.description;
-                            return swal({ type: "error", title: "Oops!", text: err.message });
-                        }
+                getUserProfile(function(err, profile) {
+                    if (err) {
+                        err.message = err.message || err.description;
+                        return swal({ type: "error", title: "Oops!", text: err.message });
+                    }
 
-                        deleteUserProfileApi(function(err) {
-                            if (err) {
-                                err.message = err.description;
-                                swal({ type: "error", title: "uh oh", text: err.message });
-                            } else {
-                                swal({ type: "success", title: "Sorry to see you go!", text: "" }).then(function() {
-                                    startLogout();
-                                });
-                            }
-                        });
+                    deleteUserProfileApi(function(err) {
+                        if (err) {
+                            err.message = err.description;
+                            swal({ type: "error", title: "uh oh", text: err.message });
+                        } else {
+                            swal({ type: "success", title: "Sorry to see you go!", text: "" }).then(function() {
+                                startLogout();
+                            });
+                        }
                     });
                 });
             }, 1000);
@@ -360,6 +358,12 @@
 
         setupBirthdaySelects();
 
+        document.querySelector("#link-google").addEventListener("click", function(e) {
+            e.preventDefault();
+            linkAccounts('google-oauth2', function(err){
+                if (!err) swal({ type: "success", title: "Accounst Linked!" });
+            });
+        });
 
         // Save the metadata, when we click on the save button
         document.querySelector("#save-profile").addEventListener("click", function() {
@@ -614,6 +618,31 @@
         return !!retrieveAccessToken();
     };
 
+    const linkAccounts = (connection, callback) => {
+        getWebAuth(function(webAuth) {
+            try {
+                const popupHandler = webAuth.popup.preload();
+                getUserManagement(function(mgmt) {
+                    const primaryProfile = retrieveProfile();
+                    webAuth.popup.authorize(
+                        Object.assign(
+                            options.link || {},
+                            { connection: connection, popupHandler: popupHandler}
+                        ), function (err, authResult) {
+                            if(err) return callback(err);
+            
+                            if (authResult.idToken) {
+                                mgmt.linkUser(primaryProfile.sub, authResult.idToken, callback);
+                            }
+                        });
+                });
+            } catch(e) {
+                // TODO: Popup blocker warn or similar 
+                console.warn('Popup blocker avoid displaying window to do account linking');
+            }
+        });
+    }
+
     var login = function(callback) {
         if (isAuthenticated()) {
             getUserProfile(callback);
@@ -695,6 +724,10 @@
         options = getDomainOptions(domain || root.location.hostname);
         setupBirthdaySelects();
         getWebAuth(function(webAuth) {
+            // This is a popup window so this was created to link accounts
+            // TODO: add some internal state to validate the linking
+            if (window.opener) { return webAuth.popup.callback(); }
+
             webAuth.parseHash(setResult(function(err, authResult) {
                 var redirectUser = function() {
                     var redirect = retrieveTargetUrl() || root.location.origin;
